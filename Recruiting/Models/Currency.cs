@@ -9,7 +9,7 @@ public partial class Currency
 
     public string Name { get; set; } = null!;
 
-    public string Code { get; set; } = null!;
+    public string Symbol { get; set; } = null!;
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

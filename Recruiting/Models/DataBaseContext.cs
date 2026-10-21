@@ -42,6 +42,7 @@ public partial class DataBaseContext : DbContext
     public virtual DbSet<ParseJobStatus> ParseJobStatuses { get; set; }
 
     public virtual DbSet<Payment> Payments { get; set; }
+    public virtual DbSet<PaymentStatus> PaymentStatuses { get; set; }
 
     public virtual DbSet<Plan> Plans { get; set; }
 
@@ -183,7 +184,7 @@ public partial class DataBaseContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("Currencies_pkey");
 
-            entity.Property(e => e.Code).HasMaxLength(3);
+            entity.Property(e => e.Symbol).HasMaxLength(3);
             entity.Property(e => e.Name).HasMaxLength(100);
         });
 
@@ -288,6 +289,26 @@ public partial class DataBaseContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("Payments_UserId_fkey");
+
+            entity.HasIndex(e => e.PaymentStatusId, "IX_Payments_PaymentStatus");
+
+            entity.HasOne(d => d.PaymentStatus).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.PaymentStatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Payments_PaymentStatusId_fkey");
+        });
+
+        modelBuilder.Entity<PaymentStatus>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PaymentStatuses_pkey");
+
+            entity.Property(e => e.Name).HasMaxLength(100);
+
+            entity.HasData(
+                new PaymentStatus { Id = 1, Name = "Ожидает оплату" },
+                new PaymentStatus { Id = 2, Name = "Оплачено" },
+                new PaymentStatus { Id = 3, Name = "Ошибка оплаты" },
+                new PaymentStatus { Id = 4, Name = "Возврат" });
         });
 
         modelBuilder.Entity<Plan>(entity =>

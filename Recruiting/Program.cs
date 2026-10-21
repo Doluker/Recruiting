@@ -1,11 +1,16 @@
+using Microsoft.EntityFrameworkCore;
 using Recruiting.Client.Pages;
 using Recruiting.Components;
+using Recruiting.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
+builder.Services.AddControllers();
+builder.Services.AddDbContext<DataBaseContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 

@@ -247,15 +247,15 @@ namespace Recruiting.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("character varying(3)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
 
                     b.HasKey("Id")
                         .HasName("Currencies_pkey");
@@ -486,10 +486,53 @@ namespace Recruiting.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex(new[] { "PaymentStatusId" }, "IX_Payments_PaymentStatus");
+
                     b.HasIndex(new[] { "ProviderPaymentId" }, "Payments_ProviderPaymentId_key")
                         .IsUnique();
 
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("Recruiting.Models.PaymentStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id")
+                        .HasName("PaymentStatuses_pkey");
+
+                    b.ToTable("PaymentStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Ожидает оплату"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Оплачено"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Ошибка оплаты"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Возврат"
+                        });
                 });
 
             modelBuilder.Entity("Recruiting.Models.Plan", b =>
@@ -1097,6 +1140,12 @@ namespace Recruiting.Migrations
                         .IsRequired()
                         .HasConstraintName("Payments_CurrencyId_fkey");
 
+                    b.HasOne("Recruiting.Models.PaymentStatus", "PaymentStatus")
+                        .WithMany("Payments")
+                        .HasForeignKey("PaymentStatusId")
+                        .IsRequired()
+                        .HasConstraintName("Payments_PaymentStatusId_fkey");
+
                     b.HasOne("Recruiting.Models.Plan", "Plan")
                         .WithMany("Payments")
                         .HasForeignKey("PlanId")
@@ -1111,6 +1160,8 @@ namespace Recruiting.Migrations
                         .HasConstraintName("Payments_UserId_fkey");
 
                     b.Navigation("Currency");
+
+                    b.Navigation("PaymentStatus");
 
                     b.Navigation("Plan");
 
@@ -1337,6 +1388,11 @@ namespace Recruiting.Migrations
             modelBuilder.Entity("Recruiting.Models.ParseJobStatus", b =>
                 {
                     b.Navigation("ParseJobs");
+                });
+
+            modelBuilder.Entity("Recruiting.Models.PaymentStatus", b =>
+                {
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("Recruiting.Models.Plan", b =>
