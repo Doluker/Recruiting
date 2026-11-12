@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Recruiting.Shared.DTOs
 {
-    public record VacancyDto(
+    public record VacancyDTO(
     int Id,
     string Title,
     string? Description,
@@ -23,10 +23,10 @@ namespace Recruiting.Shared.DTOs
     int OwnerId,
     DateTime CreatedAt,
     DateTime UpdatedAt,
-    List<VacancySkillDto> Skills,
+    List<VacancySkillDTO> Skills,
     int ApplicationsCount);
 
-    public record VacancySkillDto(int Id, int SkillId, string SkillName, bool IsRequired);
+    public record VacancySkillDTO(int Id, int SkillId, string SkillName, bool IsRequired);
 
     public record CreateVacancyRequest(
         string Title,

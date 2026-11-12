@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Recruiting.Shared.DTOs
 {
-    public record ResumeFileDto(
+    public record ResumeFileDTO(
     int Id,
     int OwnerId,
     int? CandidateId,
@@ -27,7 +27,7 @@ namespace Recruiting.Shared.DTOs
         string? ParseJobStatus,
         string Message);
 
-    public record ParseJobDto(
+    public record ParseJobDTO(
         int Id,
         int ResumeFileId,
         int ParseJobStatusId,
@@ -40,7 +40,7 @@ namespace Recruiting.Shared.DTOs
         DateTime? FinishedAt);
 
     /// <summary>Результат парсинга — плоский, чтобы клиенту не тащить JSON.</summary>
-    public record ParseJobResultDto(
+    public record ParseJobResultDTO(
         int ResumeFileId,
         string? Surname,
         string? Name,

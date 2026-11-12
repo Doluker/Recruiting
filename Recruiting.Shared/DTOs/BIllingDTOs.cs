@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Recruiting.Shared.DTOs
 {
-    public record PlanDto(
+    public record PlanDTO(
         int Id,
         string Name,
         decimal? PriceMonthly,
@@ -14,7 +14,7 @@ namespace Recruiting.Shared.DTOs
         bool CanExportExcel,
         bool HasFullDashboard);
 
-    public record SubscriptionDto(
+    public record SubscriptionDTO(
         int Id,
         int PlanId,
         string PlanName,
@@ -23,7 +23,7 @@ namespace Recruiting.Shared.DTOs
         DateTime UpdatedAt,
         bool IsActive);
 
-    public record PaymentDto(
+    public record PaymentDTO(
         int Id,
         int PlanId,
         string PlanName,
@@ -41,7 +41,7 @@ namespace Recruiting.Shared.DTOs
     /// Текущее использование лимитов тарифа.
     /// Клиент использует, чтобы показать/заблокировать кнопки.
     /// </summary>
-    public record UsageDto(
+    public record UsageDTO(
         string PlanName,
         int ActiveVacancies,
         int? MaxActiveVacancies,

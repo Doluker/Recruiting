@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Recruiting.Shared.DTOs
 {
-    public record LetterDto(
+    public record LetterDTO(
         int Id,
         int ApplicationId,
         int KindId,

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Recruiting.Shared.DTOs
 {
-    public record ActivityLogDto(
+    public record ActivityLogDTO(
         long Id,
         int? UserId,
         string? UserName,

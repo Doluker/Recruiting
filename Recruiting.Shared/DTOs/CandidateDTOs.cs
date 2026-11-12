@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Recruiting.Shared.DTOs
 {
-    public record CandidateDto(
+    public record CandidateDTO(
     int Id,
     int OwnerId,
     string? Surname,
@@ -26,11 +26,11 @@ namespace Recruiting.Shared.DTOs
     string? SourceUrl,
     DateTime CreatedAt,
     DateTime UpdatedAt,
-    List<CandidateSkillDto> Skills,
+    List<CandidateSkillDTO> Skills,
     int ApplicationsCount,
     int ResumeFilesCount);
 
-    public record CandidateSkillDto(int Id, int SkillId, string SkillName, int? Years);
+    public record CandidateSkillDTO(int Id, int SkillId, string SkillName, int? Years);
 
     public record CandidateSkillRequest(int SkillId, int? Years = null);
 
@@ -80,7 +80,7 @@ namespace Recruiting.Shared.DTOs
     /// Результат матчинга резюме на вакансию.
     /// Оценки 0..100 — как в CK_Applications_Score.
     /// </summary>
-    public record CandidateMatchDto(
+    public record CandidateMatchDTO(
         int CandidateId,
         string? Surname,
         string? Name,
