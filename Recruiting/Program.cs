@@ -32,6 +32,7 @@ builder.Services.AddHttpContextAccessor();
 // 4. Регистрация сервисов приложения
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IVacancyService, VacancyService>();
 
 // 5.Настройка Cookie - аутентификации
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>

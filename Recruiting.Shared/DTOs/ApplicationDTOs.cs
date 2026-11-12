@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Recruiting.Shared.DTOs
 {
-    public record ApplicationDto(
+    public record ApplicationDTO(
         int Id,
         int VacancyId,
         string VacancyTitle,
@@ -33,7 +33,7 @@ namespace Recruiting.Shared.DTOs
     /// <summary>Смена этапа воронки. Пишется в StatusHistory.</summary>
     public record ChangeStageRequest(int ToStatusId, string? Comment = null);
 
-    public record StatusHistoryDto(
+    public record StatusHistoryDTO(
         int Id,
         int ApplicationId,
         int? FromStatusId,

@@ -25,7 +25,7 @@ public class AuthService : IAuthService
         _currentUser = currentUser;
     }
 
-    public async Task<(bool Success, string? Error, UserDto? User)> RegisterAsync(RegisterRequest request)
+    public async Task<(bool Success, string? Error, UserDTO? User)> RegisterAsync(RegisterRequest request)
     {
         var normalizedEmail = request.Email.Trim().ToLowerInvariant();
         var normalizedUserName = request.UserName.Trim();
@@ -55,10 +55,10 @@ public class AuthService : IAuthService
 
         await SignInUserAsync(user.Id, user.UserName, user.Email, roleName);
 
-        return (true, null, new UserDto(user.Id, user.Email, user.UserName, roleName));
+        return (true, null, new UserDTO(user.Id, user.Email, user.UserName, roleName));
     }
 
-    public async Task<(bool Success, string? Error, UserDto? User)> LoginAsync(LoginRequest request)
+    public async Task<(bool Success, string? Error, UserDTO? User)> LoginAsync(LoginRequest request)
     {
         var normalizedEmail = request.Email.Trim().ToLowerInvariant();
 
@@ -74,7 +74,7 @@ public class AuthService : IAuthService
 
         await SignInUserAsync(user.Id, user.UserName, user.Email, user.Role.Name);
 
-        return (true, null, new UserDto(user.Id, user.Email, user.UserName, user.Role.Name));
+        return (true, null, new UserDTO(user.Id, user.Email, user.UserName, user.Role.Name));
     }
 
     public async Task LogoutAsync()
@@ -86,7 +86,7 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<UserProfileDto?> GetCurrentUserProfileAsync()
+    public async Task<UserProfileDTO?> GetCurrentUserProfileAsync()
     {
         if (!_currentUser.UserId.HasValue)
             return null;
@@ -98,7 +98,7 @@ public class AuthService : IAuthService
         if (user == null)
             return null;
 
-        return new UserProfileDto(
+        return new UserProfileDTO(
             user.Id,
             user.Email,
             user.UserName,
