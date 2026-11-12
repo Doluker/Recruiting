@@ -142,8 +142,8 @@ public static class DictionarySeeder
 
         foreach (var table in tables)
         {
-            await db.Database.ExecuteSqlRawAsync(
-                $"""SELECT setval('"{table}_Id_seq"', COALESCE((SELECT MAX("Id") FROM "{table}"), 0) + 1, false);""");
+            var sql = string.Format("""SELECT setval('"{0}_Id_seq"', COALESCE((SELECT MAX("Id") FROM "{0}"), 0) + 1, false);""", table);
+            await db.Database.ExecuteSqlRawAsync(sql);
         }
     }
 }

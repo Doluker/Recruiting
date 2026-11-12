@@ -1,4 +1,9 @@
 <Solution>
+  <Folder Name="/Элементы решения/">
+    <File Path=".env" />
+    <File Path=".env.example" />
+    <File Path=".gitignore" />
+  </Folder>
   <Project Path="Recruiting.Client/Recruiting.Client.csproj" />
   <Project Path="Recruiting.Shared/Recruiting.Shared.csproj" />
   <Project Path="Recruiting/Recruiting.csproj" />

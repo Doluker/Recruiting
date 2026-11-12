@@ -264,7 +264,7 @@ public partial class DataBaseContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("ParseJobStatuses_pkey");
 
-            entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"ParceJobStatuses_Id_seq\"'::regclass)");
+            entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"ParseJobStatuses_Id_seq\"'::regclass)");
             entity.Property(e => e.Name).HasMaxLength(100);
         });
 
