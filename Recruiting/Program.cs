@@ -29,12 +29,13 @@ builder.Services.AddRazorComponents().AddInteractiveWebAssemblyComponents();
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 
-// 4. Регистрация сервисов приложения
+// Регистрация сервисов приложения
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IVacancyService, VacancyService>();
+builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 
-// 5.Настройка Cookie - аутентификации
+// Настройка Cookie - аутентификации
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
     {
         options.Cookie.Name = "Recruiting.Auth";
@@ -67,12 +68,29 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 builder.Services.AddAuthorization();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
+    {
+        Title = "Recruiting API",
+        Version = "v1",
+        Description = "API системы автоматизации рекрутинга"
+    });
+});
+
 var app = builder.Build();
 
 // Конфигурация HTTP конвейера
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Recruiting API v1");
+        c.RoutePrefix = "swagger";
+    });
 }
 else
 {
