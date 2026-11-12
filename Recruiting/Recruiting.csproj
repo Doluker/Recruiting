@@ -19,6 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="11.0.0" />
     <ProjectReference Include="..\Recruiting.Client\Recruiting.Client.csproj" />
     <ProjectReference Include="..\Recruiting.Shared\Recruiting.Shared.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.13" />

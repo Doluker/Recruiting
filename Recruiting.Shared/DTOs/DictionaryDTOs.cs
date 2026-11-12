@@ -17,7 +17,7 @@ namespace Recruiting.Shared.DTOs
     /// Один запрос → все справочники для выпадающих списков.
     /// Клиент грузит это один раз при старте и кэширует.
     /// </summary>
-    public record ReferenceDataDto(
+    public record ReferenceDataDTO(
         List<DictionaryDTO> Sources,
         List<DictionaryDTO> Cities,
         List<DictionaryDTO> Educations,
