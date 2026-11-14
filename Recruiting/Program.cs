@@ -5,6 +5,7 @@ using Recruiting.Client.Pages;
 using Recruiting.Components;
 using Recruiting.Interfaces;
 using Recruiting.Models;
+using Recruiting.Seeders;
 using Recruiting.Services;
 using System.Net;
 
@@ -35,6 +36,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IVacancyService, VacancyService>();
 builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 builder.Services.AddScoped<ICandidateService, CandidateService>();
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
 
 // Настройка Cookie - аутентификации
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
@@ -107,6 +109,9 @@ app.UseAntiforgery();
 app.UseStaticFiles();
 app.MapStaticAssets();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Маппинг контроллеров API(/api/auth/...)
 app.MapControllers();
 
@@ -114,5 +119,7 @@ app.MapControllers();
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Recruiting.Client._Imports).Assembly);
+
+await DictionarySeeder.SeedAsync(app.Services);
 
 app.Run();
