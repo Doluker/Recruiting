@@ -14,7 +14,7 @@ public class DictionaryService : IDictionaryService
         _db = db;
     }
 
-    public async Task<ReferenceDataDto> GetBootstrapDataAsync()
+    public async Task<ReferenceDataDTO> GetBootstrapDataAsync()
     {
         var sources = await _db.Sources.AsNoTracking().OrderBy(x => x.Id).Select(x => new DictionaryDTO(x.Id, x.Name)).ToListAsync();
         var cities = await _db.Cities.AsNoTracking().OrderBy(x => x.Name).Select(x => new DictionaryDTO(x.Id, x.Name)).ToListAsync();
@@ -46,7 +46,7 @@ public class DictionaryService : IDictionaryService
             c.Symbol
         )).ToListAsync();
 
-        return new ReferenceDataDto(
+        return new ReferenceDataDTO(
             sources,
             cities,
             educations,
