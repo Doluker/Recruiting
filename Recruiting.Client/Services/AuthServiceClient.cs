@@ -5,11 +5,11 @@ using System.Net.Http.Json;
 
 namespace Recruiting.Client.Services
 {
-    public class AuthApiClient:IAuthApiClient
+    public class AuthServiceClient:IAuthServiceClient
     {
         private readonly HttpClient _http;
         private readonly CustomAuthStateProvider _authStateProvider;
-        public AuthApiClient(HttpClient http, AuthenticationStateProvider authStateProvider)
+        public AuthServiceClient(HttpClient http, AuthenticationStateProvider authStateProvider)
         {
             _http = http;
             _authStateProvider = (CustomAuthStateProvider)authStateProvider;

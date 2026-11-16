@@ -10,7 +10,7 @@ namespace Recruiting.Client.Components.Pages
     public partial class Register
     {
         [Inject]
-        private IAuthApiClient AuthClient { get; set; } = default!;
+        private IAuthServiceClient AuthClient { get; set; } = default!;
 
         [Inject]
         private NavigationManager Navigation { get; set; } = default!;

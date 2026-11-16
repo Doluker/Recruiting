@@ -12,7 +12,7 @@
                 <select class="vac-select-field" value="@_selectedVacId" @onchange="HandleVacancyChanged">
                     @foreach (var vac in _vacancies)
                     {
-                        <option value="@vac.Id">@vac.Title · @vac.Count @GetResponsesWord(vac.Count)</option>
+                        <option value="@vac.Id">@vac.Title — @vac.ApplicationsCount @GetResponsesWord(vac.ApplicationsCount)</option>
                     }
                 </select>
             </div>
@@ -86,15 +86,26 @@
                                 <span class="profile-city-text">@CurrentCand.City · @CurrentCand.Age</span>
                             </div>
                             <div class="profile-action-group">
-                                <button type="button" class="btn-profile-primary" @onclick="@(() => CurrentCand.Status = "work")">
-                                    <MudIcon Icon="@Icons.Material.Filled.EventAvailable" Size="Size.Small" />
-                                    <span>Пригласить на интервью</span>
-                                </button>
-                                <button type="button" class="btn-profile-neutral" @onclick="@(() => CurrentCand.Status = "work")">
-                                    <span>В резерв</span>
-                                </button>
-                                <button type="button" class="btn-profile-danger" @onclick="@(() => CurrentCand.Status = "reject")">
-                                    <span>Отказать</span>
+                                <!-- Выпадающее меню со всеми этапами воронки из справочника -->
+                                <MudMenu Label="Перевести этап"
+                                         Variant="Variant.Filled"
+                                         Color="Color.Primary"
+                                         EndIcon="@Icons.Material.Filled.ArrowDropDown"
+                                         Size="Size.Small">
+                                    @foreach (var stage in FunnelStages)
+                                    {
+                                        if (stage.Id != CurrentCand.StatusId)
+                                        {
+                                            <MudMenuItem OnClick="@(() => ChangeCandidateStageAsync(CurrentCand, stage.Id))">
+                                                @stage.Name
+                                            </MudMenuItem>
+                                        }
+                                    }
+                                </MudMenu>
+
+                                <!-- Быстрая кнопка «Отказ» -->
+                                <button type="button" class="btn-profile-danger" @onclick="@(() => RejectCandidateAsync(CurrentCand))">
+                                    <span>Отказ</span>
                                 </button>
                             </div>
                         </div>
