@@ -1,0 +1,150 @@
+@inherits LayoutComponentBase
+@inject IAuthApiClient AuthClient
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudThemeProvider Theme="_theme" IsDarkMode="_isDarkMode" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<div class="app-shell @(_isDarkMode ? "dark-theme" : "light-theme")">
+    <!-- Header Navigation -->
+    <header class="app-header">
+        <div class="header-inner">
+            <!-- Left: Brand Logo & Title -->
+            <div class="d-flex align-center gap-6 min-w-0">
+                <a href="/" class="brand-link shrink-0" title="RecruitFlow">
+                    <img src="images/logo.png" alt="RecruitFlow" class="brand-logo-img" />
+                    <span class="brand-name">Recruit<span class="brand-name-accent">Flow</span></span>
+                </a>
+
+                <nav class="header-nav d-none d-md-flex align-center gap-1">
+                    <a href="/" class="nav-link">Главная</a>
+                    <AuthorizeView Context="auth">
+                        <Authorized>
+                            <a href="workspace" class="nav-link">Отклики</a>
+                            <a href="dashboard" class="nav-link">Аналитика</a>
+                        </Authorized>
+                    </AuthorizeView>
+                </nav>
+            </div>
+
+            <!-- Right: Theme Switcher & User Profile -->
+            <div class="d-flex align-center gap-3 shrink-0">
+                <div class="theme-switch" role="group" aria-label="Переключение темы">
+                    <button type="button" class="theme-btn @(!_isDarkMode ? "active" : "")" @onclick="() => _isDarkMode = false" title="Светлая тема">
+                        <MudIcon Icon="@Icons.Material.Outlined.LightMode" Size="Size.Small" />
+                    </button>
+                    <button type="button" class="theme-btn @(_isDarkMode ? "active" : "")" @onclick="() => _isDarkMode = true" title="Тёмная тема">
+                        <MudIcon Icon="@Icons.Material.Outlined.DarkMode" Size="Size.Small" />
+                    </button>
+                </div>
+
+                <AuthorizeView Context="auth">
+                    <Authorized>
+                        <div class="profile-container">
+                            <button type="button" class="profile-trigger" @onclick="ToggleProfileMenu">
+                                <div class="avatar-circle">
+                                    @(auth.User.Identity?.Name?.Substring(0, 1).ToUpper() ?? "U")
+                                </div>
+                                <span class="profile-name d-none d-sm-inline">@auth.User.Identity?.Name</span>
+                                <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown" Size="Size.Small" Class="profile-chevron" />
+                            </button>
+
+                            @if (_profileMenuOpen)
+                            {
+                                <div class="dropdown-backdrop" @onclick="CloseProfileMenu"></div>
+
+                                <div class="profile-menu">
+                                    <div class="profile-menu-header text-left">
+                                        <div class="profile-menu-user">@auth.User.Identity?.Name</div>
+                                        <div class="profile-menu-role">Рекрутер</div>
+                                    </div>
+                                    <div class="menu-divider"></div>
+                                    <a href="profile" class="menu-item text-left" @onclick="CloseProfileMenu">
+                                        <MudIcon Icon="@Icons.Material.Outlined.Person" Size="Size.Small" />
+                                        <span>Профиль</span>
+                                    </a>
+                                    <a href="settings" class="menu-item text-left" @onclick="CloseProfileMenu">
+                                        <MudIcon Icon="@Icons.Material.Outlined.Tune" Size="Size.Small" />
+                                        <span>Настройки</span>
+                                    </a>
+                                    <div class="menu-divider"></div>
+                                    <button type="button" class="menu-item danger text-left" @onclick="HandleLogout">
+                                        <MudIcon Icon="@Icons.Material.Outlined.Logout" Size="Size.Small" />
+                                        <span>Выйти</span>
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </Authorized>
+                    <NotAuthorized>
+                        <a href="login" class="btn-auth-outline">Войти</a>
+                        <a href="register" class="btn-auth-solid">Регистрация</a>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+        @Body
+    </main>
+
+    <!-- Уютный, благородный подвал -->
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <!-- 1. О сервисе -->
+                <div class="footer-col brand-col">
+                    <div class="d-flex align-center gap-2 mb-3">
+                        <img src="images/logo.png" alt="RecruitFlow" class="footer-logo-img" />
+                        <span class="footer-brand-title">Recruit<span class="brand-name-accent">Flow</span></span>
+                    </div>
+                    <p class="footer-desc">
+                        Сервис умного разбора резюме и комфортного управления откликами соискателей.
+                    </p>
+                </div>
+
+                <!-- 2. Навигация -->
+                <div class="footer-col">
+                    <div class="footer-col-title">Навигация</div>
+                    <ul class="footer-links">
+                        <li><a href="/">Главная страница</a></li>
+                        <li><a href="workspace">Отклики соискателей</a></li>
+                        <li><a href="dashboard">Сводная аналитика</a></li>
+                    </ul>
+                </div>
+
+                <!-- 3. Возможности -->
+                <div class="footer-col">
+                    <div class="footer-col-title">Возможности</div>
+                    <ul class="footer-links">
+                        <li><span>Умное извлечение контактов</span></li>
+                        <li><span>Анализ опыта и навыков</span></li>
+                        <li><span>Оценка соответствия вакансии</span></li>
+                        <li><span>Единый реестр кандидатов</span></li>
+                    </ul>
+                </div>
+
+                <!-- 4. Безопасность -->
+                <div class="footer-col">
+                    <div class="footer-col-title">Безопасность</div>
+                    <ul class="footer-links">
+                        <li><span>Защищенный закрытый контур</span></li>
+                        <li><span>Сохранность персональных данных</span></li>
+                        <li><span>Защищенная авторизация</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    &copy; 2026 RecruitFlow. Интеллектуальный подбор персонала. Все права защищены.
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>

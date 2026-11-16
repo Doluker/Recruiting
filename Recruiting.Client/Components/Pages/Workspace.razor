@@ -1,0 +1,162 @@
+@page "/workspace"
+@attribute [Authorize]
+
+<PageTitle>Отклики соискателей — RecruitFlow</PageTitle>
+
+<div class="workspace-wrap">
+    <!-- Top Workspace Toolbar: Vacancy Selector + Create Vacancy Button -->
+    <div class="workspace-toolbar">
+        <div class="toolbar-left">
+            <div class="vac-selector-box">
+                <MudIcon Icon="@Icons.Material.Outlined.WorkOutline" Size="Size.Small" Class="vac-icon" />
+                <select class="vac-select-field" value="@_selectedVacId" @onchange="HandleVacancyChanged">
+                    @foreach (var vac in _vacancies)
+                    {
+                        <option value="@vac.Id">@vac.Title · @vac.Count @GetResponsesWord(vac.Count)</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="toolbar-right">
+            <a href="vacancies/new" class="btn-create-vacancy-action">
+                <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                <span>Создать вакансию</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Workspace Split Grid -->
+    <div class="workspace-grid">
+        <!-- Left: Search, Statuses & Candidates List -->
+        <div class="candidates-column">
+            <!-- Search field with strictly enclosed icon -->
+            <div class="search-enclosed-box">
+                <MudIcon Icon="@Icons.Material.Outlined.Search" Size="Size.Small" Class="search-inner-icon" />
+                <input type="text" @bind="_search" @bind:event="oninput" placeholder="Поиск по ФИО или должности..." class="search-inner-input" />
+            </div>
+
+            <!-- Segmented status control -->
+            <div class="status-segmented-bar" role="tablist">
+                @foreach (var tab in _statusTabs)
+                {
+                    var isAct = _currentStatus == tab.Key;
+                    <button type="button" @onclick="() => _currentStatus = tab.Key"
+                            class="status-segment-btn @(isAct ? "active" : "")">
+                        <span>@tab.Title</span>
+                    </button>
+                }
+            </div>
+
+            <!-- List of candidate cards -->
+            <div class="candidates-stack">
+                @foreach (var c in FilteredList)
+                {
+                    var isSel = c.Id == _selectedCandId;
+                    <div class="candidate-row-card @(isSel ? "selected" : "")" @onclick="() => _selectedCandId = c.Id">
+                        <div class="candidate-card-top">
+                            <span class="candidate-card-role">@c.Position</span>
+                            <span class="candidate-card-salary">@c.Salary.ToString("N0") ₽</span>
+                        </div>
+
+                        <div class="candidate-card-meta">
+                            <span class="candidate-card-name">@c.Name</span>
+                            <span class="candidate-card-geo">@c.City · @c.Age</span>
+                        </div>
+
+                        <div class="candidate-card-bottom">
+                            <span class="candidate-card-lastjob">@c.LastJob</span>
+                            <span class="status-tag status-@c.Status">@GetStatusName(c.Status)</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Right: Candidate Profile & Resume View -->
+        <div class="profile-column">
+            @if (CurrentCand != null)
+            {
+                <div class="profile-main-card">
+                    <!-- Top header & quick actions -->
+                    <div class="profile-card-header">
+                        <div class="profile-header-meta">
+                            <div class="d-flex align-center gap-2">
+                                <span class="status-tag status-@CurrentCand.Status">@GetStatusName(CurrentCand.Status)</span>
+                                <span class="profile-city-text">@CurrentCand.City · @CurrentCand.Age</span>
+                            </div>
+                            <div class="profile-action-group">
+                                <button type="button" class="btn-profile-primary" @onclick="@(() => CurrentCand.Status = "work")">
+                                    <MudIcon Icon="@Icons.Material.Filled.EventAvailable" Size="Size.Small" />
+                                    <span>Пригласить на интервью</span>
+                                </button>
+                                <button type="button" class="btn-profile-neutral" @onclick="@(() => CurrentCand.Status = "work")">
+                                    <span>В резерв</span>
+                                </button>
+                                <button type="button" class="btn-profile-danger" @onclick="@(() => CurrentCand.Status = "reject")">
+                                    <span>Отказать</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="profile-headline-row">
+                            <h1 class="profile-position-title">@CurrentCand.Position</h1>
+                            <span class="profile-salary-title">@CurrentCand.Salary.ToString("N0") ₽</span>
+                        </div>
+
+                        <div class="profile-person-name">@CurrentCand.Name</div>
+
+                        <!-- Contacts bar -->
+                        <div class="profile-contacts-bar">
+                            <div class="contact-entry">
+                                <MudIcon Icon="@Icons.Material.Outlined.Phone" Size="Size.Small" Class="contact-entry-icon" />
+                                <span>@CurrentCand.Phone</span>
+                            </div>
+                            <div class="contact-entry">
+                                <MudIcon Icon="@Icons.Material.Outlined.Send" Size="Size.Small" Class="contact-entry-icon" />
+                                <span>@CurrentCand.Telegram</span>
+                            </div>
+                            <div class="contact-entry">
+                                <MudIcon Icon="@Icons.Material.Outlined.WorkOutline" Size="Size.Small" Class="contact-entry-icon" />
+                                <span>Стаж: @CurrentCand.Experience</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills & Tech stack -->
+                    <div class="profile-card-section">
+                        <div class="section-sub-title">КЛЮЧЕВЫЕ НАВЫКИ И ТЕХНОЛОГИИ</div>
+                        <div class="skills-wrap">
+                            @foreach (var s in CurrentCand.Skills)
+                            {
+                                <span class="skill-pill">@s</span>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Experience Block -->
+                    <div class="profile-card-section">
+                        <div class="section-sub-title">ОПЫТ РАБОТЫ</div>
+                        <div class="experience-card">
+                            <div class="exp-card-header">
+                                <span class="exp-card-title">@CurrentCand.Position</span>
+                                <span class="exp-card-period">@CurrentCand.Experience</span>
+                            </div>
+                            <div class="exp-card-company">@CurrentCand.LastJob</div>
+                            <p class="exp-card-text">
+                                Проектирование и разработка клиентских интерфейсов, поддержка архитектурных стандартов проекта, участие в командных процессах и ревью кода.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="profile-main-card empty-card-view">
+                    <MudIcon Icon="@Icons.Material.Outlined.Description" Size="Size.Large" Class="mb-3 text-muted" />
+                    <p>Выберите соискателя из списка слева для изучения резюме и контактов</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

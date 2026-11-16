@@ -1,22 +1,35 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+@using Microsoft.AspNetCore.Components.Web
+@using Recruiting.Client.Components
+<!DOCTYPE html>
+<html lang="ru">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <ResourcePreloader />
-    <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
-    <link rel="stylesheet" href="@Assets["app.css"]" />
-    <link rel="stylesheet" href="@Assets["Recruiting.styles.css"]" />
-    <ImportMap />
+
+    <!-- Шрифт Inter и MudBlazor -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Стили приложения и MudBlazor -->
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="app.css" />
+
+    <!-- Подключение Scoped CSS бандлов Blazor -->
+    <link rel="stylesheet" href="Recruiting.styles.css" />
+    <link rel="stylesheet" href="Recruiting.Client.styles.css" />
+
     <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet />
+    <HeadOutlet @rendermode="new InteractiveWebAssemblyRenderMode(prerender: false)" />
 </head>
 
-<body>
-    <Routes />
-    <script src="@Assets["_framework/blazor.web.js"]"></script>
+<body style="font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; padding: 0;">
+    <Routes @rendermode="new InteractiveWebAssemblyRenderMode(prerender: false)" />
+
+    <script src="_framework/blazor.web.js"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 </body>
 
 </html>

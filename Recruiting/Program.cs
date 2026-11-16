@@ -1,7 +1,7 @@
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Recruiting.Client.Pages;
+using MudBlazor.Services;
 using Recruiting.Components;
 using Recruiting.Interfaces;
 using Recruiting.Models;
@@ -10,6 +10,8 @@ using Recruiting.Services;
 using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMudServices();
 
 // Поиск .env вверх по дереву папок
 Env.TraversePath().Load();
@@ -118,7 +120,7 @@ app.MapControllers();
 // Blazor WebAssembly хостинг
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Recruiting.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(Recruiting.Client.Components._Imports).Assembly);
 
 await DictionarySeeder.SeedAsync(app.Services);
 

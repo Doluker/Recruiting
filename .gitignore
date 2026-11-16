@@ -67,6 +67,7 @@ secrets.json
 *.sql.gz
 /backups/
 /db-dumps/
+dump.md
 
 # ─── Docker ───────────────────────────────────────────────────
 docker-compose.override.yml

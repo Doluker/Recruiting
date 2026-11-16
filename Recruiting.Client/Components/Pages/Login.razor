@@ -1,0 +1,69 @@
+@page "/login"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Вход в систему — RecruitFlow</PageTitle>
+
+<div class="auth-page-wrap">
+    <div class="auth-card">
+        <div class="auth-card-top">
+            <a href="/" class="back-nav-link">
+                <MudIcon Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small" />
+                <span>На главную</span>
+            </a>
+        </div>
+
+        <div class="auth-brand-block">
+            <img src="images/logo.png" alt="RecruitFlow" class="auth-brand-logo" />
+            <h1 class="auth-title">Вход в систему</h1>
+            <p class="auth-sub">Автоматизированная платформа подбора персонала</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert-error-box">
+                <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" />
+                <span>@errorMessage</span>
+            </div>
+        }
+
+        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+
+            <div class="form-group">
+                <label class="form-label" for="login-email">Рабочий Email</label>
+                <div class="input-container">
+                    <MudIcon Icon="@Icons.Material.Outlined.Email" Size="Size.Small" Class="input-icon" />
+                    <input id="login-email" type="email" class="form-field" @bind="loginModel.Email" placeholder="recruiter@company.ru" autocomplete="username" />
+                </div>
+                <ValidationMessage For="() => loginModel.Email" class="form-error-msg" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="login-password">Пароль</label>
+                <div class="input-container">
+                    <MudIcon Icon="@Icons.Material.Outlined.Lock" Size="Size.Small" Class="input-icon" />
+                    <input id="login-password" type="password" class="form-field" @bind="loginModel.Password" placeholder="••••••••" autocomplete="current-password" />
+                </div>
+                <ValidationMessage For="() => loginModel.Password" class="form-error-msg" />
+            </div>
+
+            <button type="submit" class="btn-submit-action" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span class="btn-spinner"></span>
+                    <span>Выполняется вход...</span>
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Login" Size="Size.Small" />
+                    <span>Войти в аккаунт</span>
+                }
+            </button>
+        </EditForm>
+
+        <div class="auth-footer">
+            <span>Впервые в RecruitFlow? </span>
+            <a href="register" class="link-highlight">Зарегистрироваться</a>
+        </div>
+    </div>
+</div>
