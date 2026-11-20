@@ -1,177 +1,168 @@
-﻿@page "/vacancies/new"
+@page "/vacancies/new"
 @attribute [Authorize]
 @rendermode InteractiveWebAssembly
 
 <PageTitle>Новая вакансия — RecruitFlow</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Medium" Class="my-6">
+<div class="vacancy-page-wrap">
     <!-- Кнопка назад -->
-    <div class="mb-4">
-        <MudButton Variant="Variant.Text"
-                   StartIcon="@Icons.Material.Filled.ArrowBack"
-                   Href="/workspace"
-                   Color="Color.Default">
-            Назад к вакансиям
-        </MudButton>
-    </div>
+    <a href="/workspace" class="back-btn-link">
+        <MudIcon Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small" />
+        <span>Вернуться к вакансиям</span>
+    </a>
 
-    <MudCard Elevation="2" Class="pa-6" Style="border-radius: 12px;">
-        <MudCardHeader Class="px-0 pt-0">
-            <CardHeaderContent>
-                <MudText Typo="Typo.h5" Style="font-weight: 700;">Создание новой вакансии</MudText>
-                <MudText Typo="Typo.body2" Color="Color.Secondary">
-                    Заполните параметры вакансии и требования к кандидату
-                </MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
+    <div class="vacancy-main-card">
+        <div class="vacancy-header">
+            <h1 class="vacancy-heading">Создание новой вакансии</h1>
+            <p class="vacancy-subheading">Заполните ключевые параметры вакансии, зарплатную вилку и стек навыков</p>
+        </div>
 
-        <MudCardContent Class="px-0">
-            @if (_isLoading)
-            {
-                <div class="d-flex justify-center my-8">
-                    <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
-                </div>
-            }
-            else
-            {
-                <EditForm Model="@_model" OnValidSubmit="HandleSubmit">
-                    <DataAnnotationsValidator />
+        @if (_isLoading)
+        {
+            <div class="d-flex justify-center my-12">
+                <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+            </div>
+        }
+        else
+        {
+            <EditForm Model="@_model" OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
 
-                    <MudGrid Spacing="3">
-                        <!-- Название вакансии -->
-                        <MudItem xs="12">
-                            <MudTextField Label="Название вакансии *"
-                                          @bind-Value="_model.Title"
-                                          For="@(() => _model.Title)"
-                                          Placeholder="Например: Senior Frontend Developer"
-                                          Variant="Variant.Outlined"
-                                          Required="true" />
-                        </MudItem>
+                <!-- 1. Основные параметры -->
+                <div class="form-section-title">Основная информация</div>
+                <MudGrid Spacing="3">
+                    <MudItem xs="12">
+                        <MudTextField Label="Название вакансии *"
+                                      @bind-Value="_model.Title"
+                                      For="@(() => _model.Title)"
+                                      Placeholder="Например: Senior Frontend Developer"
+                                      Variant="Variant.Outlined"
+                                      Required="true" />
+                    </MudItem>
 
-                        <!-- Город и Образование -->
-                        <MudItem xs="12" sm="6">
-                            <MudSelect T="int?" Label="Город" @bind-Value="_model.CityId" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Clearable="true">
-                                @foreach (var city in Cities)
-                                {
-                                    <MudSelectItem Value="@((int?)city.Id)">@city.Name</MudSelectItem>
-                                }
-                            </MudSelect>
-                        </MudItem>
-
-                        <MudItem xs="12" sm="6">
-                            <MudSelect T="int?" Label="Образование" @bind-Value="_model.EducationId" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Clearable="true">
-                                @foreach (var edu in Educations)
-                                {
-                                    <MudSelectItem Value="@((int?)edu.Id)">@edu.Name</MudSelectItem>
-                                }
-                            </MudSelect>
-                        </MudItem>
-
-                        <!-- Зарплатная вилка -->
-                        <MudItem xs="12" sm="4">
-                            <MudNumericField T="int?" Label="Зарплата от (₽)"
-                                             @bind-Value="_model.SalaryFrom"
-                                             Variant="Variant.Outlined"
-                                             Min="0"
-                                             Step="5000" />
-                        </MudItem>
-
-                        <MudItem xs="12" sm="4">
-                            <MudNumericField T="int?" Label="Зарплата до (₽)"
-                                             @bind-Value="_model.SalaryTo"
-                                             Variant="Variant.Outlined"
-                                             Min="0"
-                                             Step="5000" />
-                        </MudItem>
-
-                        <MudItem xs="12" sm="4">
-                            <MudNumericField T="int?" Label="Опыт работы (лет)"
-                                             @bind-Value="_model.ExperienceYears"
-                                             Variant="Variant.Outlined"
-                                             Min="0"
-                                             Max="30" />
-                        </MudItem>
-
-                        <!-- Навыки (Skills) -->
-                        <MudItem xs="12">
-                            <MudText Typo="Typo.subtitle2" Class="mb-1" Style="font-weight: 600;">Требуемые ключевые навыки</MudText>
-                            <div class="d-flex align-center gap-2">
-                                <MudSelect T="int?" Label="Выберите навык из справочника"
-                                           @bind-Value="_selectedSkillToAdd"
-                                           Variant="Variant.Outlined"
-                                           Dense="true"
-                                           Class="flex-grow-1">
-                                    @foreach (var skill in AvailableSkills)
-                                    {
-                                        <MudSelectItem Value="@((int?)skill.Id)">@skill.Name</MudSelectItem>
-                                    }
-                                </MudSelect>
-                                <MudCheckBox T="bool" @bind-Value="_isSkillRequired" Label="Обязательный" Color="Color.Primary" Dense="true" />
-                                <MudButton Variant="Variant.Filled"
-                                           Color="Color.Primary"
-                                           OnClick="AddSkill"
-                                           Disabled="@(!_selectedSkillToAdd.HasValue)">
-                                    Добавить
-                                </MudButton>
-                            </div>
-
-                            <!-- Список добавленных навыков в виде чипсов -->
-                            <div class="d-flex flex-wrap gap-2 mt-3">
-                                @foreach (var s in _selectedSkills)
-                                {
-                                    <MudChip T="string"
-                                             Color="@(s.IsRequired ? Color.Primary : Color.Default)"
-                                             Variant="@(s.IsRequired ? Variant.Filled : Variant.Outlined)"
-                                             OnClose="@(() => RemoveSkill(s.SkillId))">
-                                        @s.SkillName @(s.IsRequired ? "(обяз.)" : "")
-                                    </MudChip>
-                                }
-                            </div>
-                        </MudItem>
-
-                        <!-- Описание вакансии -->
-                        <MudItem xs="12">
-                            <MudTextField Label="Описание и требования"
-                                          @bind-Value="_model.Description"
-                                          Lines="6"
-                                          Variant="Variant.Outlined"
-                                          Placeholder="Опишите задачи, стек технологий и условия работы..." />
-                        </MudItem>
-                    </MudGrid>
-
-                    <!-- Кнопки действий -->
-                    <div class="d-flex justify-end gap-3 mt-6">
-                        <MudButton Variant="Variant.Outlined"
-                                   Color="Color.Default"
-                                   Href="/workspace"
-                                   Disabled="_isSaving">
-                            Отмена
-                        </MudButton>
-
-                        <MudButton Variant="Variant.Outlined"
-                                   Color="Color.Secondary"
-                                   OnClick="@(() => SubmitWithStatus(isDraft: true))"
-                                   Disabled="_isSaving">
-                            Сохранить черновик
-                        </MudButton>
-
-                        <MudButton ButtonType="ButtonType.Submit"
-                                   Variant="Variant.Filled"
-                                   Color="Color.Primary"
-                                   Disabled="_isSaving">
-                            @if (_isSaving)
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="int?" Label="Город / Локация" @bind-Value="_model.CityId" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Clearable="true">
+                            @foreach (var city in Cities)
                             {
-                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                <span class="ms-2">Сохранение...</span>
+                                <MudSelectItem Value="@((int?)city.Id)">@city.Name</MudSelectItem>
                             }
-                            else
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="int?" Label="Образование" @bind-Value="_model.EducationId" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Clearable="true">
+                            @foreach (var edu in Educations)
                             {
-                                <span>Опубликовать вакансию</span>
+                                <MudSelectItem Value="@((int?)edu.Id)">@edu.Name</MudSelectItem>
                             }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+
+                <!-- 2. Условия и компенсация -->
+                <div class="form-section-title">Условия и опыт</div>
+                <MudGrid Spacing="3">
+                    <MudItem xs="12" sm="4">
+                        <MudNumericField T="int?" Label="Зарплата от (₽)"
+                                         @bind-Value="_model.SalaryFrom"
+                                         Variant="Variant.Outlined"
+                                         Min="0"
+                                         Step="5000" />
+                    </MudItem>
+
+                    <MudItem xs="12" sm="4">
+                        <MudNumericField T="int?" Label="Зарплата до (₽)"
+                                         @bind-Value="_model.SalaryTo"
+                                         Variant="Variant.Outlined"
+                                         Min="0"
+                                         Step="5000" />
+                    </MudItem>
+
+                    <MudItem xs="12" sm="4">
+                        <MudNumericField T="int?" Label="Требуемый опыт (лет)"
+                                         @bind-Value="_model.ExperienceYears"
+                                         Variant="Variant.Outlined"
+                                         Min="0"
+                                         Max="30" />
+                    </MudItem>
+                </MudGrid>
+
+                <!-- 3. Навыки -->
+                <div class="form-section-title">Ключевые навыки</div>
+                <div class="skill-selector-container">
+                    <div class="d-flex align-center gap-3 flex-wrap">
+                        <MudSelect T="int?" Label="Выберите навык из справочника" 
+                                   @bind-Value="_selectedSkillToAdd" 
+                                   Variant="Variant.Outlined" 
+                                   Dense="true" 
+                                   Class="flex-grow-1"
+                                   AnchorOrigin="Origin.BottomCenter">
+                            @foreach (var skill in AvailableSkills)
+                            {
+                                <MudSelectItem Value="@((int?)skill.Id)">@skill.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <MudCheckBox T="bool" @bind-Value="_isSkillRequired" Label="Обязательный навык" Color="Color.Primary" Dense="true" />
+
+                        <MudButton Variant="Variant.Filled" 
+                                   Color="Color.Primary" 
+                                   OnClick="AddSkill" 
+                                   Disabled="@(!_selectedSkillToAdd.HasValue)">
+                            Добавить в вакансию
                         </MudButton>
                     </div>
-                </EditForm>
-            }
-        </MudCardContent>
-    </MudCard>
-</MudContainer>
+
+                    @if (_selectedSkills.Count > 0)
+                    {
+                        <div class="skill-chips-row">
+                            @foreach (var s in _selectedSkills)
+                            {
+                                <div class="skill-badge-custom @(s.IsRequired ? "required" : "")">
+                                    <span>@s.SkillName</span>
+                                    @if (s.IsRequired)
+                                    {
+                                        <span style="font-size: 10.5px; opacity: 0.85;">(обяз.)</span>
+                                    }
+                                    <button type="button" class="skill-badge-close" @onclick="@(() => RemoveSkill(s.SkillId))" title="Удалить">
+                                        <MudIcon Icon="@Icons.Material.Filled.Close" Size="Size.Small" />
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- 4. Описание -->
+                <div class="form-section-title">Описание и требования</div>
+                <MudTextField Label="Подробное описание вакансии"
+                              @bind-Value="_model.Description"
+                              Lines="6"
+                              Variant="Variant.Outlined"
+                              Placeholder="Опишите задачи, ожидания от кандидата, условия работы и бонусы..." />
+
+                <!-- 5. Нижняя панель действий -->
+                <div class="vacancy-action-bar">
+                    <a href="/workspace" class="btn-cancel-link">
+                        Отмена
+                    </a>
+
+                    <button type="button" class="btn-draft-action" @onclick="@(() => SubmitWithStatus(isDraft: true))" disabled="@_isSaving">
+                        Сохранить черновик
+                    </button>
+
+                    <button type="submit" class="btn-publish-action" disabled="@_isSaving">
+                        @if (_isSaving)
+                        {
+                            <span>Сохранение...</span>
+                        }
+                        else
+                        {
+                            <span>Опубликовать вакансию</span>
+                        }
+                    </button>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>

@@ -18,7 +18,7 @@ public static class DictionarySeeder
         // ── Справочники с enum'ами ──────────────────────────────────────
         await Seed(db.Roles, new List<Role>
         {
-            new() { Id = (int)RoleEnum.Admin, Name = "Админ" },
+            new() { Id = (int)RoleEnum.Admin, Name = "Admin" },
             new() { Id = (int)RoleEnum.Hr,     Name = "HR" }
         }, r => r.Id);
 
@@ -112,6 +112,7 @@ public static class DictionarySeeder
 
         await db.SaveChangesAsync();
 
+        await SeedAdminUserAsync(db);
         await FixSequencesAsync(db);
     }
 
@@ -144,6 +145,26 @@ public static class DictionarySeeder
         {
             var sql = string.Format("""SELECT setval('"{0}_Id_seq"', COALESCE((SELECT MAX("Id") FROM "{0}"), 0) + 1, false);""", table);
             await db.Database.ExecuteSqlRawAsync(sql);
+        }
+    }
+    private static async Task SeedAdminUserAsync(DataBaseContext db)
+    {
+        const string adminEmail = "admin@recruitflow.ru";
+
+        var adminExists = await db.Users.AnyAsync(u => u.RoleId == (int)RoleEnum.Admin || u.Email == adminEmail);
+        if (!adminExists)
+        {
+            var adminUser = new User
+            {
+                Email = adminEmail,
+                UserName = "Administrator",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+                RoleId = (int)RoleEnum.Admin,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+            await db.Users.AddAsync(adminUser);
+            await db.SaveChangesAsync();
         }
     }
 }

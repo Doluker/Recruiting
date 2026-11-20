@@ -1,0 +1,352 @@
+@page "/admin"
+@attribute [Authorize(Roles = "Admin")]
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Администрирование — RecruitFlow</PageTitle>
+
+<div class="admin-view-wrap">
+
+    @if (_isLoading)
+    {
+        <div class="d-flex justify-center my-12">
+            <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+        </div>
+    }
+    else
+    {
+        <!-- Реальные KPI метрики -->
+        <div class="admin-metrics-grid">
+            <div class="metric-card metric-card-primary">
+                <div class="metric-info">
+                    <div class="metric-title">ВАКАНСИЙ В БАЗЕ</div>
+                    <div class="metric-count">@_vacancies.Count</div>
+                    <div class="metric-hint">@_vacancies.Count(v => v.VacancyStatusName == "Open" || v.VacancyStatusId == 1) открытых позиций</div>
+                </div>
+                <div class="metric-icon-wrap">
+                    <MudIcon Icon="@Icons.Material.Outlined.WorkOutline" />
+                </div>
+            </div>
+
+            <div class="metric-card metric-card-sage">
+                <div class="metric-info">
+                    <div class="metric-title">КАНДИДАТОВ В РЕЕСТРЕ</div>
+                    <div class="metric-count">@_candidates.Count</div>
+                    <div class="metric-hint">Все соискатели в системе</div>
+                </div>
+                <div class="metric-icon-wrap">
+                    <MudIcon Icon="@Icons.Material.Outlined.PeopleOutline" />
+                </div>
+            </div>
+
+            <div class="metric-card metric-card-terracotta">
+                <div class="metric-info">
+                    <div class="metric-title">ОТКЛИКОВ В ВОРОНКЕ</div>
+                    <div class="metric-count">@_applications.Count</div>
+                    <div class="metric-hint">Активные процессы рассмотрения</div>
+                </div>
+                <div class="metric-icon-wrap">
+                    <MudIcon Icon="@Icons.Material.Outlined.FilterAlt" />
+                </div>
+            </div>
+
+            <div class="metric-card metric-card-neutral">
+                <div class="metric-info">
+                    <div class="metric-title">СПРАВОЧНИКИ СИСТЕМЫ</div>
+                    <div class="metric-count">@_skills.Count</div>
+                    <div class="metric-hint">@_cities.Count локаций • @_positions.Count должностей</div>
+                </div>
+                <div class="metric-icon-wrap">
+                    <MudIcon Icon="@Icons.Material.Outlined.AccountTree" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Основная панель с реальными вкладками -->
+        <div class="admin-shell">
+            <MudTabs Elevation="0" Rounded="false" Color="Color.Transparent" ApplyEffectsToContainer="false">
+
+                <!-- Вкладка 1: Справочники -->
+                <MudTabPanel Text="Справочники" Icon="@Icons.Material.Outlined.AutoStories">
+                    <div class="pa-6">
+                        <MudTabs Elevation="0" Rounded="true" Color="Color.Transparent">
+                            <MudTabPanel Text="@($"Пользователи и роли ({_users.Count})")">
+                                <div class="pt-4">
+                                    <MudTable Items="_users" Dense="true" Hover="true" Elevation="0" Outlined="true">
+                                        <HeaderContent>
+                                            <MudTh Style="font-weight: 700;">Сотрудник</MudTh>
+                                            <MudTh Style="font-weight: 700;">Email</MudTh>
+                                            <MudTh Style="font-weight: 700;">Текущая роль</MudTh>
+                                            <MudTh Style="font-weight: 700;">Статус</MudTh>
+                                            <MudTh Style="font-weight: 700; text-align: right;">Действие</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate>
+                                            <MudTd Style="font-weight: 600;">@context.UserName</MudTd>
+                                            <MudTd Style="color: var(--text-secondary);">@context.Email</MudTd>
+                                            <MudTd>
+                                                <span class="badge-tag @(context.RoleName == "Admin" ? "badge-tag-admin" : "badge-tag-recruiter")">
+                                                    @context.RoleName
+                                                </span>
+                                            </MudTd>
+                                            <MudTd>
+                                                <span class="badge-tag badge-tag-active">Активен</span>
+                                            </MudTd>
+                                            <MudTd Style="text-align: right;">
+                                                <button type="button" class="btn-secondary-action" @onclick="() => ToggleUserRoleAsync(context)">
+                                                    @(context.RoleName == "Admin" ? "Сделать HR" : "Назначить Админом")
+                                                </button>
+                                            </MudTd>
+                                        </RowTemplate>
+                                    </MudTable>
+                                </div>
+                            </MudTabPanel>
+
+
+                            <!-- Навыки -->
+                            <MudTabPanel Text="@($"Навыки ({_skills.Count})")">
+                                <div class="pt-4">
+                                    <div class="section-toolbar">
+                                        <div class="search-box-wrap">
+                                            <MudIcon Icon="@Icons.Material.Outlined.Search" Size="Size.Small" Color="Color.Secondary" />
+                                            <input type="text" @bind="_skillSearch" @bind:event="oninput" placeholder="Поиск навыка..." class="search-input-bare" />
+                                        </div>
+                                        <button type="button" class="btn-add-action" @onclick="OpenAddSkillDialogAsync">
+                                            <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                                            <span>Добавить навык</span>
+                                        </button>
+                                    </div>
+
+                                    <MudTable Items="FilteredSkills" Dense="true" Hover="true" Elevation="0" Outlined="true">
+                                        <HeaderContent>
+                                            <MudTh Style="width: 80px; font-weight: 700;">ID</MudTh>
+                                            <MudTh Style="font-weight: 700;">Название компетенции</MudTh>
+                                            <MudTh Style="width: 140px; font-weight: 700;">Тип</MudTh>
+                                            <MudTh Style="width: 100px; text-align: right; font-weight: 700;">Действия</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate>
+                                            <MudTd>#@context.Id</MudTd>
+                                            <MudTd Style="font-weight: 600; color: var(--text-primary);">@context.Name</MudTd>
+                                            <MudTd><span class="badge-tag badge-tag-skill">Hard Skill</span></MudTd>
+                                            <MudTd Style="text-align: right;">
+                                                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Color="Color.Default" OnClick="() => OpenEditSkillDialogAsync(context)" Title="Редактировать" />
+                                                <MudIconButton Icon="@Icons.Material.Outlined.DeleteOutline" Size="Size.Small" Color="Color.Error" OnClick="() => DeleteSkillAsync(context)" Title="Удалить" />
+                                            </MudTd>
+                                        </RowTemplate>
+                                        <PagerContent>
+                                            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50 }" />
+                                        </PagerContent>
+                                    </MudTable>
+                                </div>
+                            </MudTabPanel>
+
+                            <!-- Города -->
+                            <MudTabPanel Text="@($"Города ({_cities.Count})")">
+                                <div class="pt-4">
+                                    <div class="section-toolbar">
+                                        <div class="search-box-wrap">
+                                            <MudIcon Icon="@Icons.Material.Outlined.Search" Size="Size.Small" Color="Color.Secondary" />
+                                            <input type="text" @bind="_citySearch" @bind:event="oninput" placeholder="Поиск города..." class="search-input-bare" />
+                                        </div>
+                                        <button type="button" class="btn-add-action" @onclick="OpenAddCityDialogAsync">
+                                            <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                                            <span>Добавить город</span>
+                                        </button>
+                                    </div>
+
+                                    <MudTable Items="FilteredCities" Dense="true" Hover="true" Elevation="0" Outlined="true">
+                                        <HeaderContent>
+                                            <MudTh Style="width: 80px; font-weight: 700;">ID</MudTh>
+                                            <MudTh Style="font-weight: 700;">Город / Локация</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate>
+                                            <MudTd>#@context.Id</MudTd>
+                                            <MudTd Style="font-weight: 600;">@context.Name</MudTd>
+                                        </RowTemplate>
+                                        <PagerContent>
+                                            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50 }" />
+                                        </PagerContent>
+                                    </MudTable>
+                                </div>
+                            </MudTabPanel>
+
+                            <!-- Должности -->
+                            <MudTabPanel Text="@($"Должности ({_positions.Count})")">
+                                <div class="pt-4">
+                                    <div class="section-toolbar">
+                                        <div class="search-box-wrap">
+                                            <MudIcon Icon="@Icons.Material.Outlined.Search" Size="Size.Small" Color="Color.Secondary" />
+                                            <input type="text" @bind="_positionSearch" @bind:event="oninput" placeholder="Поиск должности..." class="search-input-bare" />
+                                        </div>
+                                        <button type="button" class="btn-add-action" @onclick="OpenAddPositionDialogAsync">
+                                            <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                                            <span>Добавить должность</span>
+                                        </button>
+                                    </div>
+
+                                    <MudTable Items="FilteredPositions" Dense="true" Hover="true" Elevation="0" Outlined="true">
+                                        <HeaderContent>
+                                            <MudTh Style="width: 80px; font-weight: 700;">ID</MudTh>
+                                            <MudTh Style="font-weight: 700;">Название должности</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate>
+                                            <MudTd>#@context.Id</MudTd>
+                                            <MudTd Style="font-weight: 600;">@context.Name</MudTd>
+                                        </RowTemplate>
+                                        <PagerContent>
+                                            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50 }" />
+                                        </PagerContent>
+                                    </MudTable>
+                                </div>
+                            </MudTabPanel>
+
+                            <!-- Воронка -->
+                            <MudTabPanel Text="@($"Воронка ({FunnelStatuses.Count})")">
+                                <div class="pt-4">
+                                    <MudTable Items="FunnelStatuses" Dense="true" Hover="true" Elevation="0" Outlined="true">
+                                        <HeaderContent>
+                                            <MudTh Style="width: 100px; font-weight: 700;">Порядок</MudTh>
+                                            <MudTh Style="font-weight: 700;">Этап воронки</MudTh>
+                                            <MudTh Style="width: 180px; font-weight: 700;">Отображение</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate>
+                                            <MudTd>Этап @context.Id</MudTd>
+                                            <MudTd Style="font-weight: 600;">@context.Name</MudTd>
+                                            <MudTd><span class="badge-tag badge-tag-funnel">@context.Name</span></MudTd>
+                                        </RowTemplate>
+                                    </MudTable>
+                                </div>
+                            </MudTabPanel>
+                        </MudTabs>
+                    </div>
+                </MudTabPanel>
+
+                <!-- Вкладка 2: Реальные Вакансии -->
+                <MudTabPanel Text="@($"Вакансии ({_vacancies.Count})")" Icon="@Icons.Material.Outlined.WorkOutline">
+                    <div class="pa-6">
+                        <div class="section-toolbar">
+                            <div class="search-box-wrap">
+                                <MudIcon Icon="@Icons.Material.Outlined.Search" Size="Size.Small" Color="Color.Secondary" />
+                                <input type="text" @bind="_vacancySearch" @bind:event="oninput" placeholder="Поиск по названию или городу..." class="search-input-bare" />
+                            </div>
+                            <a href="vacancies/new" class="btn-add-action">
+                                <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                                <span>Создать вакансию</span>
+                            </a>
+                        </div>
+
+                        <MudTable Items="FilteredVacancies" Dense="true" Hover="true" Elevation="0" Outlined="true">
+                            <HeaderContent>
+                                <MudTh Style="width: 70px; font-weight: 700;">ID</MudTh>
+                                <MudTh Style="font-weight: 700;">Название вакансии</MudTh>
+                                <MudTh Style="font-weight: 700;">Город</MudTh>
+                                <MudTh Style="font-weight: 700;">Зарплатная вилка</MudTh>
+                                <MudTh Style="font-weight: 700;">Статус</MudTh>
+                                <MudTh Style="font-weight: 700;">Откликов</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd>#@context.Id</MudTd>
+                                <MudTd Style="font-weight: 600; color: var(--text-primary);">@context.Title</MudTd>
+                                <MudTd>@(context.CityName ?? "Удаленно")</MudTd>
+                                <MudTd>
+                                    @if (context.SalaryFrom.HasValue || context.SalaryTo.HasValue)
+                                    {
+                                        <span>@($"{context.SalaryFrom:N0} — {context.SalaryTo:N0} ₽")</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: var(--text-muted);">Не указана</span>
+                                    }
+                                </MudTd>
+                                <MudTd>
+                                    <span class="badge-tag badge-tag-active">@(context.VacancyStatusName ?? "Open")</span>
+                                </MudTd>
+                                <MudTd Style="font-weight: 700; color: var(--color-accent);">@context.ApplicationsCount</MudTd>
+                            </RowTemplate>
+                            <PagerContent>
+                                <MudTablePager PageSizeOptions="new int[] { 10, 25, 50 }" />
+                            </PagerContent>
+                        </MudTable>
+                    </div>
+                </MudTabPanel>
+
+                <!-- Вкладка 3: Реальные Кандидаты -->
+                <MudTabPanel Text="@($"Кандидаты ({_candidates.Count})")" Icon="@Icons.Material.Outlined.PeopleOutline">
+                    <div class="pa-6">
+                        <div class="section-toolbar">
+                            <div class="search-box-wrap">
+                                <MudIcon Icon="@Icons.Material.Outlined.Search" Size="Size.Small" Color="Color.Secondary" />
+                                <input type="text" @bind="_candidateSearch" @bind:event="oninput" placeholder="Поиск по ФИО, email, должности..." class="search-input-bare" />
+                            </div>
+                        </div>
+
+                        <MudTable Items="FilteredCandidates" Dense="true" Hover="true" Elevation="0" Outlined="true">
+                            <HeaderContent>
+                                <MudTh Style="width: 70px; font-weight: 700;">ID</MudTh>
+                                <MudTh Style="font-weight: 700;">ФИО Кандидата</MudTh>
+                                <MudTh Style="font-weight: 700;">Желаемая позиция</MudTh>
+                                <MudTh Style="font-weight: 700;">Город</MudTh>
+                                <MudTh Style="font-weight: 700;">Контакты</MudTh>
+                                <MudTh Style="font-weight: 700;">Резюме</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd>#@context.Id</MudTd>
+                                <MudTd Style="font-weight: 600; color: var(--text-primary);">
+                                    @($"{context.Surname} {context.Name} {context.Patronymic}".Trim())
+                                </MudTd>
+                                <MudTd>@(context.PositionName ?? "—")</MudTd>
+                                <MudTd>@(context.CityName ?? "—")</MudTd>
+                                <MudTd Style="font-size: 13px; color: var(--text-secondary);">
+                                    @(context.Email ?? context.Phone ?? "—")
+                                </MudTd>
+                                <MudTd>
+                                    <span class="badge-tag badge-tag-neutral">@context.ResumeFilesCount файлов</span>
+                                </MudTd>
+                            </RowTemplate>
+                            <PagerContent>
+                                <MudTablePager PageSizeOptions="new int[] { 10, 25, 50 }" />
+                            </PagerContent>
+                        </MudTable>
+                    </div>
+                </MudTabPanel>
+
+                <!-- Вкладка 4: Реальные Отклики -->
+                <MudTabPanel Text="@($"Отклики ({_applications.Count})")" Icon="@Icons.Material.Outlined.AssignmentInd">
+                    <div class="pa-6">
+                        <div class="section-toolbar">
+                            <div class="search-box-wrap">
+                                <MudIcon Icon="@Icons.Material.Outlined.Search" Size="Size.Small" Color="Color.Secondary" />
+                                <input type="text" @bind="_applicationSearch" @bind:event="oninput" placeholder="Поиск по кандидату или вакансии..." class="search-input-bare" />
+                            </div>
+                        </div>
+
+                        <MudTable Items="FilteredApplications" Dense="true" Hover="true" Elevation="0" Outlined="true">
+                            <HeaderContent>
+                                <MudTh Style="width: 70px; font-weight: 700;">ID</MudTh>
+                                <MudTh Style="font-weight: 700;">Кандидат</MudTh>
+                                <MudTh Style="font-weight: 700;">Вакансия</MudTh>
+                                <MudTh Style="font-weight: 700;">Этап</MudTh>
+                                <MudTh Style="font-weight: 700;">Матчинг</MudTh>
+                                <MudTh Style="font-weight: 700;">Дата отклика</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd>#@context.Id</MudTd>
+                                <MudTd Style="font-weight: 600;">@context.CandidateName</MudTd>
+                                <MudTd>@context.VacancyTitle</MudTd>
+                                <MudTd><span class="badge-tag badge-tag-funnel">@context.ApplicationStatusName</span></MudTd>
+                                <MudTd Style="font-weight: 700; color: var(--color-secondary);">
+                                    @(context.Score.HasValue ? $"{context.Score:0}%" : "—")
+                                </MudTd>
+                                <MudTd Style="font-size: 13px; color: var(--text-secondary);">
+                                    @context.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                                </MudTd>
+                            </RowTemplate>
+                            <PagerContent>
+                                <MudTablePager PageSizeOptions="new int[] { 10, 25, 50 }" />
+                            </PagerContent>
+                        </MudTable>
+                    </div>
+                </MudTabPanel>
+
+            </MudTabs>
+        </div>
+    }
+</div>

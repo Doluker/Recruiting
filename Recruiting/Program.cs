@@ -16,15 +16,7 @@ builder.Services.AddMudServices();
 // Поиск .env вверх по дереву папок
 Env.TraversePath().Load();
 
-// Строка подключения к PostgreSQL
-var connectionString = new Npgsql.NpgsqlConnectionStringBuilder
-{
-    Host = Env.GetString("DB_HOST", "localhost"),
-    Port = int.TryParse(Env.GetString("DB_PORT"), out var port) ? port : 5432,
-    Database = Env.GetString("DB_NAME"),
-    Username = Env.GetString("DB_USER"),
-    Password = Env.GetString("DB_PASSWORD")
-}.ConnectionString;
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataBaseContext>(options => options.UseNpgsql(connectionString));
 
 // Сервисы ASP.NET Core и Blazor

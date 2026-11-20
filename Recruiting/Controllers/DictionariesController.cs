@@ -79,4 +79,57 @@ public class DictionariesController : ControllerBase
 
         return Ok(item);
     }
+    [HttpPut("skills/{id:int}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateSkill(int id, [FromBody] CreateDictionaryItemRequest request)
+    {
+        var (success, error, item) = await _dictionaryService.UpdateSkillAsync(id, request.Name);
+        if (!success) return BadRequest(new ApiError("UPDATE_FAILED", error ?? "Ошибка обновления навыка"));
+        return Ok(item);
+    }
+
+    [HttpDelete("skills/{id:int}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteSkill(int id)
+    {
+        var (success, error) = await _dictionaryService.DeleteSkillAsync(id);
+        if (!success) return BadRequest(new ApiError("DELETE_FAILED", error ?? "Ошибка удаления навыка"));
+        return Ok(new OperationResult(true, "Навык удален"));
+    }
+
+    [HttpPut("cities/{id:int}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateCity(int id, [FromBody] CreateDictionaryItemRequest request)
+    {
+        var (success, error, item) = await _dictionaryService.UpdateCityAsync(id, request.Name);
+        if (!success) return BadRequest(new ApiError("UPDATE_FAILED", error ?? "Ошибка обновления города"));
+        return Ok(item);
+    }
+
+    [HttpDelete("cities/{id:int}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteCity(int id)
+    {
+        var (success, error) = await _dictionaryService.DeleteCityAsync(id);
+        if (!success) return BadRequest(new ApiError("DELETE_FAILED", error ?? "Ошибка удаления города"));
+        return Ok(new OperationResult(true, "Город удален"));
+    }
+
+    [HttpPut("positions/{id:int}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdatePosition(int id, [FromBody] CreateDictionaryItemRequest request)
+    {
+        var (success, error, item) = await _dictionaryService.UpdatePositionAsync(id, request.Name);
+        if (!success) return BadRequest(new ApiError("UPDATE_FAILED", error ?? "Ошибка обновления должности"));
+        return Ok(item);
+    }
+
+    [HttpDelete("positions/{id:int}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeletePosition(int id)
+    {
+        var (success, error) = await _dictionaryService.DeletePositionAsync(id);
+        if (!success) return BadRequest(new ApiError("DELETE_FAILED", error ?? "Ошибка удаления должности"));
+        return Ok(new OperationResult(true, "Должность удалена"));
+    }
 }

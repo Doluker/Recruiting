@@ -69,5 +69,15 @@ namespace Recruiting.Client.Services
                 _authStateProvider.NotifyUserLogout();
             }
         }
+        public async Task<List<UserProfileDTO>?> GetAllUsersAsync()
+        {
+            return await _http.GetFromJsonAsync<List<UserProfileDTO>>("api/auth/users");
+        }
+
+        public async Task<bool> ChangeUserRoleAsync(int userId, int roleId)
+        {
+            var response = await _http.PutAsync($"api/auth/users/{userId}/role?roleId={roleId}", null);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

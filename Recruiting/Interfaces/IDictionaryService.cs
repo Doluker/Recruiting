@@ -11,5 +11,13 @@ namespace Recruiting.Interfaces
         Task<(bool Success, string? Error, DictionaryDTO? Item)> AddSkillAsync(string name);
         Task<List<DictionaryDTO>> GetPositionsAsync(string? search = null);
         Task<(bool Success, string? Error, DictionaryDTO? Item)> AddPositionAsync(string name);
+        Task<(bool Success, string? Error, DictionaryDTO? Item)> UpdateCityAsync(int id, string name);
+        Task<(bool Success, string? Error)> DeleteCityAsync(int id);
+
+        Task<(bool Success, string? Error, DictionaryDTO? Item)> UpdateSkillAsync(int id, string name);
+        Task<(bool Success, string? Error)> DeleteSkillAsync(int id);
+
+        Task<(bool Success, string? Error, DictionaryDTO? Item)> UpdatePositionAsync(int id, string name);
+        Task<(bool Success, string? Error)> DeletePositionAsync(int id);
     }
 }
