@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Recruiting.Interfaces;
 using Recruiting.Shared.DTOs;
 
@@ -59,5 +60,33 @@ public class AuthController : ControllerBase
         }
 
         return Ok(profile);
+    }
+    [HttpGet("users")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetUsers([FromServices] Recruiting.Models.DataBaseContext db)
+    {
+        var users = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(
+            db.Users.Include(u => u.Role).Select(u => new UserProfileDTO(
+                u.Id,
+                u.Email,
+                u.UserName,
+                u.Role.Name,
+                u.IsActive,
+                u.CreatedAt
+            ))
+        );
+        return Ok(users);
+    }
+
+    [HttpPut("users/{id:int}/role")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ChangeUserRole(int id, [FromQuery] int roleId, [FromServices] Recruiting.Models.DataBaseContext db)
+    {
+        var user = await db.Users.FindAsync(id);
+        if (user == null) return NotFound(new ApiError("NOT_FOUND", "Пользователь не найден"));
+
+        user.RoleId = roleId; // 1 = Admin, 2 = Hr
+        await db.SaveChangesAsync();
+        return Ok(new OperationResult(true, "Роль пользователя обновлена"));
     }
 }

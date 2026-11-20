@@ -1,0 +1,106 @@
+@using MudBlazor
+
+<MudDialog Class="rf-dynamic-modal">
+    <TitleContent>
+        <div class="rf-modal-header">
+            <div class="rf-modal-icon-badge" style="background-color: @IconBgColor; color: @IconColor;">
+                <MudIcon Icon="@Icon" Size="Size.Small" />
+            </div>
+            <div class="rf-modal-titles">
+                <MudText Typo="Typo.h6" Class="rf-modal-title">@Title</MudText>
+                @if (!string.IsNullOrEmpty(Subtitle))
+                {
+                    <MudText Typo="Typo.caption" Class="rf-modal-subtitle">@Subtitle</MudText>
+                }
+            </div>
+        </div>
+    </TitleContent>
+
+    <DialogContent>
+        <div class="rf-modal-fields">
+            @foreach (var field in Fields)
+            {
+                <div class="rf-field-row">
+                    @switch (field.FieldType)
+                    {
+                        case DynamicFieldType.Text:
+                            <MudTextField T="string"
+                                          Label="@field.Label"
+                                          Placeholder="@field.Placeholder"
+                                          HelperText="@field.HelperText"
+                                          @bind-Value="field.StringValue"
+                                          Variant="Variant.Outlined"
+                                          Required="@field.IsRequired"
+                                          Immediate="true"
+                                          Error="@HasError(field.Key)"
+                                          ErrorText="Поле обязательно для заполнения" />
+                            break;
+
+                        case DynamicFieldType.TextArea:
+                            <MudTextField T="string"
+                                          Label="@field.Label"
+                                          Placeholder="@field.Placeholder"
+                                          HelperText="@field.HelperText"
+                                          Lines="@field.Rows"
+                                          @bind-Value="field.StringValue"
+                                          Variant="Variant.Outlined"
+                                          Required="@field.IsRequired"
+                                          Error="@HasError(field.Key)"
+                                          ErrorText="Поле обязательно для заполнения" />
+                            break;
+
+                        case DynamicFieldType.Number:
+                            <MudNumericField T="int?"
+                                             Label="@field.Label"
+                                             Placeholder="@field.Placeholder"
+                                             HelperText="@field.HelperText"
+                                             @bind-Value="field.NumberValue"
+                                             Variant="Variant.Outlined"
+                                             Min="@field.Min"
+                                             Max="@field.Max"
+                                             Required="@field.IsRequired"
+                                             Error="@HasError(field.Key)"
+                                             ErrorText="Укажите корректное число" />
+                            break;
+
+                        case DynamicFieldType.Select:
+                            <MudSelect T="string"
+                                       Label="@field.Label"
+                                       HelperText="@field.HelperText"
+                                       @bind-Value="field.StringValue"
+                                       Variant="Variant.Outlined"
+                                       AnchorOrigin="Origin.BottomCenter"
+                                       Required="@field.IsRequired"
+                                       Error="@HasError(field.Key)"
+                                       ErrorText="Выберите значение">
+                                @if (field.Options != null)
+                                {
+                                    @foreach (var opt in field.Options)
+                                    {
+                                        <MudSelectItem Value="@opt.Key">@opt.Label</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                            break;
+
+                        case DynamicFieldType.Switch:
+                            <MudSwitch T="bool"
+                                       Label="@field.Label"
+                                       @bind-Value="field.BoolValue"
+                                       Color="Color.Primary" />
+                            break;
+                    }
+                </div>
+            }
+        </div>
+    </DialogContent>
+
+    <DialogActions>
+        <button type="button" class="rf-btn-cancel" @onclick="Cancel">
+            Отмена
+        </button>
+        <button type="button" class="rf-btn-submit" @onclick="Submit">
+            @SubmitText
+        </button>
+    </DialogActions>
+</MudDialog>

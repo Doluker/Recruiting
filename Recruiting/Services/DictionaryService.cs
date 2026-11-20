@@ -147,4 +147,57 @@ public class DictionaryService : IDictionaryService
 
         return (true, null, new DictionaryDTO(pos.Id, pos.Name));
     }
+    public async Task<(bool Success, string? Error, DictionaryDTO? Item)> UpdateCityAsync(int id, string name)
+    {
+        var item = await _db.Cities.FindAsync(id);
+        if (item == null) return (false, "Город не найден", null);
+        item.Name = name.Trim();
+        await _db.SaveChangesAsync();
+        return (true, null, new DictionaryDTO(item.Id, item.Name));
+    }
+
+    public async Task<(bool Success, string? Error)> DeleteCityAsync(int id)
+    {
+        var item = await _db.Cities.FindAsync(id);
+        if (item == null) return (false, "Город не найден");
+        _db.Cities.Remove(item);
+        await _db.SaveChangesAsync();
+        return (true, null);
+    }
+
+    public async Task<(bool Success, string? Error, DictionaryDTO? Item)> UpdateSkillAsync(int id, string name)
+    {
+        var item = await _db.Skills.FindAsync(id);
+        if (item == null) return (false, "Навык не найден", null);
+        item.Name = name.Trim();
+        await _db.SaveChangesAsync();
+        return (true, null, new DictionaryDTO(item.Id, item.Name));
+    }
+
+    public async Task<(bool Success, string? Error)> DeleteSkillAsync(int id)
+    {
+        var item = await _db.Skills.FindAsync(id);
+        if (item == null) return (false, "Навык не найден");
+        _db.Skills.Remove(item);
+        await _db.SaveChangesAsync();
+        return (true, null);
+    }
+
+    public async Task<(bool Success, string? Error, DictionaryDTO? Item)> UpdatePositionAsync(int id, string name)
+    {
+        var item = await _db.Positions.FindAsync(id);
+        if (item == null) return (false, "Должность не найдена", null);
+        item.Name = name.Trim();
+        await _db.SaveChangesAsync();
+        return (true, null, new DictionaryDTO(item.Id, item.Name));
+    }
+
+    public async Task<(bool Success, string? Error)> DeletePositionAsync(int id)
+    {
+        var item = await _db.Positions.FindAsync(id);
+        if (item == null) return (false, "Должность не найдена");
+        _db.Positions.Remove(item);
+        await _db.SaveChangesAsync();
+        return (true, null);
+    }
 }

@@ -1,0 +1,152 @@
+@page "/dashboard"
+@attribute [Authorize]
+
+<PageTitle>Аналитика — RecruitFlow</PageTitle>
+
+<div class="dashboard-wrap">
+    <!-- Header -->
+    <div class="dash-top">
+        <div>
+            <h1 class="dash-heading">Сводная аналитика найма</h1>
+            <p class="dash-subheading">Ключевые показатели эффективности подбора и динамика движения соискателей по стадиям</p>
+        </div>
+    </div>
+
+    <!-- 4 Warm Minimalist KPI Cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card kpi-slate">
+            <div class="kpi-top">
+                <span class="kpi-caption">ВАКАНСИЙ В РАБОТЕ</span>
+                <MudIcon Icon="@Icons.Material.Outlined.WorkOutline" Size="Size.Small" Class="kpi-icon" />
+            </div>
+            <div class="kpi-number">12</div>
+            <div class="kpi-delta">+2 открыты в этом месяце</div>
+        </div>
+
+        <div class="kpi-card kpi-terracotta">
+            <div class="kpi-top">
+                <span class="kpi-caption">КАНДИДАТОВ В БАЗЕ</span>
+                <MudIcon Icon="@Icons.Material.Outlined.PeopleOutline" Size="Size.Small" Class="kpi-icon" />
+            </div>
+            <div class="kpi-number">148</div>
+            <div class="kpi-delta">+14 новых откликов</div>
+        </div>
+
+        <div class="kpi-card kpi-sage">
+            <div class="kpi-top">
+                <span class="kpi-caption">ИНТЕРВЬЮ НА НЕДЕЛЕ</span>
+                <MudIcon Icon="@Icons.Material.Outlined.EventAvailable" Size="Size.Small" Class="kpi-icon" />
+            </div>
+            <div class="kpi-number">5</div>
+            <div class="kpi-delta">Ближайшее сегодня в 15:00</div>
+        </div>
+
+        <div class="kpi-card kpi-warm">
+            <div class="kpi-top">
+                <span class="kpi-caption">СРЕДНИЙ СРОК ЗАКРЫТИЯ</span>
+                <MudIcon Icon="@Icons.Material.Outlined.Timer" Size="Size.Small" Class="kpi-icon" />
+            </div>
+            <div class="kpi-number">14 дней</div>
+            <div class="kpi-delta">На 3 дня быстрее планового</div>
+        </div>
+    </div>
+
+    <!-- Analytics Columns -->
+    <div class="dash-grid-cols">
+        <!-- Funnel Section -->
+        <div class="dash-panel funnel-panel">
+            <div class="panel-header">
+                <div>
+                    <h2 class="panel-title">Воронка движения кандидатов</h2>
+                    <span class="panel-subtitle">Конверсия откликов по последовательным этапам найма</span>
+                </div>
+                <a href="workspace" class="panel-link">
+                    <span>К откликам</span>
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" />
+                </a>
+            </div>
+
+            <div class="funnel-steps">
+                <div class="funnel-row">
+                    <div class="step-meta">
+                        <span class="step-name">1. Первичный скрининг</span>
+                        <span class="step-count">64 кандидата <span class="step-pct">43%</span></span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill fill-1" style="width: 43%;"></div>
+                    </div>
+                </div>
+
+                <div class="funnel-row">
+                    <div class="step-meta">
+                        <span class="step-name">2. Собеседование с HR</span>
+                        <span class="step-count">32 кандидата <span class="step-pct">22%</span></span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill fill-2" style="width: 22%;"></div>
+                    </div>
+                </div>
+
+                <div class="funnel-row">
+                    <div class="step-meta">
+                        <span class="step-name">3. Техническое интервью</span>
+                        <span class="step-count">18 кандидатов <span class="step-pct">12%</span></span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill fill-3" style="width: 12%;"></div>
+                    </div>
+                </div>
+
+                <div class="funnel-row">
+                    <div class="step-meta">
+                        <span class="step-name">4. Выставленный оффер</span>
+                        <span class="step-count">5 кандидатов <span class="step-pct">4%</span></span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill fill-4" style="width: 4%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sources & Channel Efficiency -->
+        <div class="dash-panel channels-panel">
+            <div class="panel-header">
+                <div>
+                    <h2 class="panel-title">Источники соискателей</h2>
+                    <span class="panel-subtitle">Эффективность каналов привлечения</span>
+                </div>
+            </div>
+
+            <div class="channels-list">
+                <div class="channel-entry">
+                    <div class="channel-name-wrap">
+                        <span class="channel-dot dot-primary"></span>
+                        <span class="channel-label">Прямой отклик на сайте</span>
+                    </div>
+                    <span class="channel-val">54% (80 чел.)</span>
+                </div>
+
+                <div class="channel-entry">
+                    <div class="channel-name-wrap">
+                        <span class="channel-dot dot-secondary"></span>
+                        <span class="channel-label">Профессиональные платформы</span>
+                    </div>
+                    <span class="channel-val">26% (38 чел.)</span>
+                </div>
+
+                <div class="channel-entry">
+                    <div class="channel-name-wrap">
+                        <span class="channel-dot dot-accent"></span>
+                        <span class="channel-label">Внутренние рекомендации</span>
+                    </div>
+                    <span class="channel-val">20% (30 чел.)</span>
+                </div>
+            </div>
+
+            <div class="channels-action-wrap">
+                <a href="workspace" class="btn-workspace-jump">Перейти в рабочую область →</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+services:
+  # 1. База данных PostgreSQL
+  postgres:
+    image: postgres:17-alpine
+    container_name: recruiting_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-recruiting_db}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - recruiting_net
+
+  # 2. Объектное хранилище MinIO для PDF-файлов резюме
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: recruiting_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin123}
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Веб-панель управления MinIO
+    volumes:
+      - minio_data:/data
+    networks:
+      - recruiting_net
+
+  # 3. Веб-приложение (ASP.NET Core API + Blazor WASM)
+  web:
+    build:
+      context: .
+      dockerfile: Recruiting/Dockerfile
+    container_name: recruiting_web
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      # Переопределяем строку подключения внутри Docker-сети:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${DB_NAME:-recruiting_db};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-postgres}
+      # Настройки MinIO внутри Docker-сети:
+      - Minio__Endpoint=minio:9000
+      - Minio__AccessKey=${MINIO_ROOT_USER:-minioadmin}
+      - Minio__SecretKey=${MINIO_ROOT_PASSWORD:-minioadmin123}
+      - Minio__BucketName=resumes
+      - Minio__UseSSL=false
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
+      - minio
+    networks:
+      - recruiting_net
+
+networks:
+  recruiting_net:
+    driver: bridge
+
+volumes:
+  pg_data:
+  minio_data:

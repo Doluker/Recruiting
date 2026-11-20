@@ -1,0 +1,246 @@
+@page "/"
+
+<PageTitle>RecruitFlow — Интеллектуальный разбор резюме и подбор персонала</PageTitle>
+
+<div class="landing-page">
+    <!-- 1. Full-bleed Hero Section (как в референсе «Мебель Тимохи» — от края до края) -->
+    <section class="hero-section">
+        <div class="hero-content-wrap">
+            <h1 class="hero-title">
+                Создайте сильную <span class="hero-accent-text">команду</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Интеллектуальная платформа автоматического разбора резюме, извлечения ключевых навыков и быстрого отбора лучших кандидатов
+            </p>
+
+            <!-- 3 компактных полупрозрачных бейджа поверх фото (как в референсе) -->
+            <div class="hero-pill-badges">
+                <div class="hero-pill-card">
+                    <MudIcon Icon="@Icons.Material.Outlined.FlashOn" Size="Size.Medium" Class="pill-icon" />
+                    <div class="pill-title">Мгновенный разбор</div>
+                </div>
+
+                <div class="hero-pill-card">
+                    <MudIcon Icon="@Icons.Material.Outlined.CheckCircleOutline" Size="Size.Medium" Class="pill-icon" />
+                    <div class="pill-title">Оценка навыков</div>
+                </div>
+
+                <div class="hero-pill-card">
+                    <MudIcon Icon="@Icons.Material.Outlined.Shield" Size="Size.Medium" Class="pill-icon" />
+                    <div class="pill-title">Единая база</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. НАГЛЯДНОЕ СРАВНЕНИЕ (Было vs Стало) — без лишних декоративных линий -->
+    <section class="section-container">
+        <div class="section-header-clean text-center">
+            <h2 class="section-title-clean">Почему стоит использовать RecruitFlow</h2>
+            <p class="section-desc-clean">
+                Сравнение классического ручного чтения откликов и работы с автоматизированной системой
+            </p>
+        </div>
+
+        <div class="visual-compare-container">
+            <!-- Блок «БЫЛО: Ручной разбор» -->
+            <div class="compare-box box-before">
+                <div class="compare-box-header">
+                    <div class="d-flex align-center gap-2">
+                        <span class="compare-icon-status err">✕</span>
+                        <span class="compare-box-heading">Ручной разбор резюме</span>
+                    </div>
+                    <span class="time-label bad">~25 минут на файл</span>
+                </div>
+
+                <div class="mock-doc-sheet">
+                    <div class="mock-file-header">
+                        <span class="file-name-text">Резюме_Frontend_финал_2026.pdf</span>
+                        <span class="file-pages-text">4 страницы</span>
+                    </div>
+
+                    <div class="mock-file-content">
+                        <div class="mock-line text-muted">Сведения о соискателе...</div>
+                        <div class="mock-warning-note">
+                            Контакты и опыт разбросаны по многостраничному документу
+                        </div>
+                        <div class="mock-chaos-tags">
+                            <span class="chaos-tag">React 18</span>
+                            <span class="chaos-tag">CSS</span>
+                            <span class="chaos-tag">MS Word</span>
+                            <span class="chaos-tag">TypeScript</span>
+                            <span class="chaos-tag">Английский B2</span>
+                            <span class="chaos-tag">Git</span>
+                        </div>
+                        <div class="mock-line text-muted">Опыт работы: 2021 — н.в., различные проекты...</div>
+                    </div>
+
+                    <div class="mock-file-drawbacks">
+                        <div class="drawback-item">
+                            <MudIcon Icon="@Icons.Material.Filled.Close" Size="Size.Small" Class="drawback-icon" />
+                            <span>Рекрутер вручную копирует телефон и почту в таблицы</span>
+                        </div>
+                        <div class="drawback-item">
+                            <MudIcon Icon="@Icons.Material.Filled.Close" Size="Size.Small" Class="drawback-icon" />
+                            <span>Нет быстрой и объективной оценки соответствия вакансии</span>
+                        </div>
+                        <div class="drawback-item">
+                            <MudIcon Icon="@Icons.Material.Filled.Close" Size="Size.Small" Class="drawback-icon" />
+                            <span>Усталость глаз и потеря сильных кандидатов в потоке</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Разделитель-трансформация -->
+            <div class="compare-middle-divider">
+                <div class="middle-card">
+                    <img src="images/logo.png" alt="RecruitFlow" class="middle-logo-img" />
+                    <span class="middle-title">Умный анализ</span>
+                    <span class="middle-speed">0.4 сек</span>
+                </div>
+            </div>
+
+            <!-- Блок «СТАЛО: RecruitFlow» -->
+            <div class="compare-box box-after">
+                <div class="compare-box-header">
+                    <div class="d-flex align-center gap-2">
+                        <span class="compare-icon-status ok">✓</span>
+                        <span class="compare-box-heading">С платформой RecruitFlow</span>
+                    </div>
+                    <span class="time-label good">0.4 секунды</span>
+                </div>
+
+                <div class="mock-structured-sheet">
+                    <div class="cand-top-info">
+                        <div>
+                            <div class="d-flex align-center gap-2 mb-1">
+                                <span class="cand-name-text">Смирнов Алексей Викторович</span>
+                                <span class="cand-match-pill">96% Соответствие</span>
+                            </div>
+                            <div class="cand-role-meta">Senior Frontend Developer · Москва · 29 лет</div>
+                        </div>
+                        <div class="cand-salary-text">260 000 ₽</div>
+                    </div>
+
+                    <!-- Контакты -->
+                    <div class="cand-contacts-row">
+                        <div class="contact-chip">
+                            <MudIcon Icon="@Icons.Material.Outlined.Phone" Size="Size.Small" Class="text-sage" />
+                            <span>+7 (916) 548-21-90</span>
+                        </div>
+                        <div class="contact-chip">
+                            <MudIcon Icon="@Icons.Material.Outlined.Send" Size="Size.Small" Class="text-sage" />
+                            <span>@@alex_smirnov</span>
+                        </div>
+                        <div class="contact-chip">
+                            <MudIcon Icon="@Icons.Material.Outlined.WorkOutline" Size="Size.Small" Class="text-sage" />
+                            <span>Стаж: 5 лет 4 мес</span>
+                        </div>
+                    </div>
+
+                    <!-- Разобранный стек -->
+                    <div class="cand-skills-section">
+                        <div class="skills-heading">Подтвержденный релевантный стек:</div>
+                        <div class="skills-pills-list">
+                            <span class="skill-entry match">React (5 лет)</span>
+                            <span class="skill-entry match">TypeScript (4 года)</span>
+                            <span class="skill-entry match">Next.js (2 года)</span>
+                            <span class="skill-entry match">Tailwind CSS</span>
+                            <span class="skill-entry regular">Docker</span>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="cand-footer-actions">
+                        <button type="button" class="btn-cand-invite">
+                            <MudIcon Icon="@Icons.Material.Filled.Check" Size="Size.Small" />
+                            <span>Пригласить на интервью</span>
+                        </button>
+                        <button type="button" class="btn-cand-reserve">В резерв</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Наглядная шкала экономии времени (ROI) -->
+    <section class="section-container">
+        <div class="roi-card">
+            <div class="roi-text-col">
+                <div class="section-tag-small">ЭКОНОМИЯ ВРЕМЕНИ</div>
+                <h3 class="roi-title">Экономия до 95% времени рекрутера на каждой вакансии</h3>
+                <p class="roi-paragraph">
+                    При потоке в 100 откликов рекрутер тратит более рабочей недели только на первичное чтение документов. Сервис сокращает этот процесс до полутора часов.
+                </p>
+            </div>
+
+            <div class="roi-visual-col">
+                <div class="roi-bar-unit">
+                    <div class="bar-label-line">
+                        <span class="font-weight-medium">Ручной разбор 100 резюме</span>
+                        <span class="font-weight-bold text-err">41.5 час (~5 рабочих дней)</span>
+                    </div>
+                    <div class="bar-track-bg">
+                        <div class="bar-fill-line bad-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="roi-bar-unit">
+                    <div class="bar-label-line">
+                        <span class="font-weight-medium">С RecruitFlow (только целевые интервью)</span>
+                        <span class="font-weight-bold text-ok">1.5 часа (в 27 раз быстрее)</span>
+                    </div>
+                    <div class="bar-track-bg">
+                        <div class="bar-fill-line good-fill" style="width: 6%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Конвейер этапов отбора -->
+    <section class="section-container mb-6">
+        <div class="section-header-clean text-center">
+            <h2 class="section-title-clean">Как устроен рабочий процесс</h2>
+            <p class="section-desc-clean">
+                Последовательная цепочка обработки каждого входящего кандидата
+            </p>
+        </div>
+
+        <div class="pipeline-grid">
+            <div class="step-card">
+                <div class="step-badge">01</div>
+                <h3 class="step-title">Загрузка резюме</h3>
+                <p class="step-desc">
+                    Резюме в PDF или Word поступает в систему и моментально проходит первичную проверку целостности.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-badge">02</div>
+                <h3 class="step-title">Анализ профиля</h3>
+                <p class="step-desc">
+                    Алгоритмы распознают контактные данные, стаж, образование и релевантный стек технологий.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-badge">03</div>
+                <h3 class="step-title">Ранжирование</h3>
+                <p class="step-desc">
+                    Соискатели автоматически сортируются по степени соответствия требованиям открытой вакансии.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-badge">04</div>
+                <h3 class="step-title">Оффер кандидату</h3>
+                <p class="step-desc">
+                    Рекрутер приглашает сильнейших специалистов на интервью и переводит кандидата по этапам вплоть до найма.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>

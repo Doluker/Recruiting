@@ -1,7 +1,7 @@
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Recruiting.Client.Pages;
+using MudBlazor.Services;
 using Recruiting.Components;
 using Recruiting.Interfaces;
 using Recruiting.Models;
@@ -11,18 +11,12 @@ using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddMudServices();
+
 // Поиск .env вверх по дереву папок
 Env.TraversePath().Load();
 
-// Строка подключения к PostgreSQL
-var connectionString = new Npgsql.NpgsqlConnectionStringBuilder
-{
-    Host = Env.GetString("DB_HOST", "localhost"),
-    Port = int.TryParse(Env.GetString("DB_PORT"), out var port) ? port : 5432,
-    Database = Env.GetString("DB_NAME"),
-    Username = Env.GetString("DB_USER"),
-    Password = Env.GetString("DB_PASSWORD")
-}.ConnectionString;
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataBaseContext>(options => options.UseNpgsql(connectionString));
 
 // Сервисы ASP.NET Core и Blazor
@@ -118,7 +112,7 @@ app.MapControllers();
 // Blazor WebAssembly хостинг
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Recruiting.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(Recruiting.Client.Components._Imports).Assembly);
 
 await DictionarySeeder.SeedAsync(app.Services);
 

@@ -1,0 +1,294 @@
+/* ==========================================================================
+   Dashboard View — Warm Noble Analytics
+   Clean, vibrant solid colors, zero gradients, zero glow, sharp hairline borders
+   ========================================================================== */
+
+.dashboard-wrap {
+    padding-bottom: 32px;
+}
+
+.dash-top {
+    margin-bottom: 24px;
+}
+
+.dash-heading {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    color: var(--text-primary);
+    margin: 0 0 4px;
+}
+
+.dash-subheading {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* 1. KPI Grid */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.kpi-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-main);
+    border-radius: 10px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-card-hover);
+}
+
+.kpi-card .kpi-number {
+    color: var(--color-primary);
+}
+
+.kpi-card .kpi-icon {
+    color: var(--color-accent);
+}
+
+.kpi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.kpi-caption {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+}
+
+.kpi-number {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 6px;
+}
+
+.kpi-delta {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 2. Dashboard Columns */
+.dash-grid-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+}
+
+@media (min-width: 1024px) {
+    .dash-grid-cols {
+        grid-template-columns: 1.6fr 1fr;
+    }
+}
+
+.dash-panel {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-main);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.panel-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 2px;
+}
+
+.panel-subtitle {
+    font-size: 12.5px;
+    color: var(--text-muted);
+}
+
+.panel-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color 0.12s ease;
+}
+
+.panel-link:hover {
+    color: var(--color-primary);
+}
+
+/* Funnel Steps */
+.funnel-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.funnel-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.step-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+}
+
+.step-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.step-count {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.step-pct {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    font-weight: normal;
+    margin-left: 4px;
+}
+
+.progress-track {
+    height: 8px;
+    background-color: var(--bg-elevated);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.fill-1 {
+    background-color: var(--color-primary);
+}
+
+.fill-2 {
+    background-color: var(--color-accent);
+}
+
+.fill-3 {
+    background-color: var(--color-secondary);
+}
+
+.fill-4 {
+    background-color: #B87333;
+}
+
+/* Channels Panel */
+.channels-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.channels-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.channel-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    font-size: 13px;
+}
+
+.channel-name-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.channel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.dot-primary {
+    background-color: var(--color-primary);
+}
+
+.dot-secondary {
+    background-color: var(--color-accent);
+}
+
+.dot-accent {
+    background-color: var(--color-secondary);
+}
+
+.channel-label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.channel-val {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.channels-action-wrap {
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.btn-workspace-jump {
+    display: block;
+    text-align: center;
+    padding: 11px 16px;
+    border-radius: 8px;
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    color: #FFFFFF !important;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.12s ease;
+}
+
+.btn-workspace-jump:hover {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+}
