@@ -1,10 +1,13 @@
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Minio;
 using MudBlazor.Services;
+using Recruiting.Background;
 using Recruiting.Components;
 using Recruiting.Interfaces;
 using Recruiting.Models;
+using Recruiting.Options;
 using Recruiting.Seeders;
 using Recruiting.Services;
 using System.Net;
@@ -19,6 +22,17 @@ Env.TraversePath().Load();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataBaseContext>(options => options.UseNpgsql(connectionString));
 
+builder.Services.Configure<MinioOptions>(builder.Configuration.GetSection(MinioOptions.SectionName));
+builder.Services.AddSingleton<IMinioClient>(sp =>
+{
+    var options = builder.Configuration.GetSection(MinioOptions.SectionName).Get<MinioOptions>() ?? new();
+    return new MinioClient()
+        .WithEndpoint(options.Endpoint)
+        .WithCredentials(options.AccessKey, options.SecretKey)
+        .WithSSL(options.UseSSL)
+        .Build();
+});
+
 // Сервисы ASP.NET Core и Blazor
 builder.Services.AddRazorComponents().AddInteractiveWebAssemblyComponents();
 builder.Services.AddControllers();
@@ -31,6 +45,12 @@ builder.Services.AddScoped<IVacancyService, VacancyService>();
 builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 builder.Services.AddScoped<ICandidateService, CandidateService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IStorageService, MinioStorageService>();
+builder.Services.AddScoped<IResumeService, ResumeService>();
+builder.Services.AddSingleton<IPdfTextExtractor, PdfTextExtractor>();
+
+// Воркеры
+builder.Services.AddHostedService<ResumeParsingWorker>();
 
 // Настройка Cookie - аутентификации
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
