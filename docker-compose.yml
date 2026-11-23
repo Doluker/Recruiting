@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "5433:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
@@ -17,7 +17,7 @@ services:
 
   # 2. Объектное хранилище MinIO для PDF-файлов резюме
   minio:
-    image: quay.io/minio/minio:latest
+    image: pgsty/silo:latest 
     container_name: recruiting_minio
     restart: unless-stopped
     command: server /data --console-address ":9001"

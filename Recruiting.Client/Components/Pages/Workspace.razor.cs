@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Recruiting.Client.Components.Dialogs;
 using Recruiting.Client.Interfaces;
 using Recruiting.Shared.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Recruiting.Client.Components.Pages;
 
@@ -16,6 +18,7 @@ public partial class Workspace
     [Inject] private ICandidateServiceClient CandidateService { get; set; } = default!;
     [Inject] private IDictionaryServiceClient DictionaryService { get; set; } = default!;
     [Inject] private ISnackbar Snackbar { get; set; } = default!;
+    [Inject] private IDialogService DialogService { get; set; } = default!;
 
     [SupplyParameterFromQuery(Name = "vacId")]
     public string? VacancyId { get; set; }
@@ -231,5 +234,10 @@ public partial class Workspace
         if (mod10 == 1 && mod100 != 11) return "отклик";
         if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return "отклика";
         return "откликов";
+    }
+    private async Task OpenUploadResumeDialog()
+    {
+        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+        await DialogService.ShowAsync<UploadResumeDialog>("Загрузка резюме", options);
     }
 }

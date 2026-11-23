@@ -36,7 +36,7 @@ namespace Recruiting.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Code = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false)
+                    Symbol = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -989,7 +989,7 @@ namespace Recruiting.Migrations
         private static void CreateExpressionIndexes(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql("""CREATE UNIQUE INDEX IF NOT EXISTS "UX_Cities_Name" ON "Cities" (lower("Name"));""");
-            migrationBuilder.Sql("""CREATE UNIQUE INDEX IF NOT EXISTS "UX_Currencies_Code" ON "Currencies" (upper("Code"));""");
+            migrationBuilder.Sql("""CREATE UNIQUE INDEX IF NOT EXISTS "UX_Currencies_Symbol" ON "Currencies" (upper("Symbol"));""");
             migrationBuilder.Sql("""CREATE UNIQUE INDEX IF NOT EXISTS "UX_Educations_Name" ON "Educations" (lower("Name"));""");
             migrationBuilder.Sql("""CREATE UNIQUE INDEX IF NOT EXISTS "UX_FunnelStatuses_Name" ON "FunnelStatuses" (lower("Name"));""");
             migrationBuilder.Sql("""CREATE UNIQUE INDEX IF NOT EXISTS "UX_LetterKinds_Name" ON "LetterKinds" (lower("Name"));""");

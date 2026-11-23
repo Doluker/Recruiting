@@ -11,18 +11,18 @@ namespace Recruiting.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             // ── снимаем FK, ссылающиеся на справочники ───────────────────
-            migrationBuilder.Sql("""ALTER TABLE "Users" DROP CONSTRAINT "Users_RoleId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "Vacancies" DROP CONSTRAINT "Vacancies_VacancyStatusId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "Vacancies" DROP CONSTRAINT "Vacancies_SourceId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "Candidates" DROP CONSTRAINT "Candidates_SourceId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "Applications" DROP CONSTRAINT "Applications_ApplicationStatusId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "StatusHistory" DROP CONSTRAINT "StatusHistory_FromStatusId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "StatusHistory" DROP CONSTRAINT "StatusHistory_ToStatusId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "Letters" DROP CONSTRAINT "Letters_KindId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "Letters" DROP CONSTRAINT "Letters_StatusId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "ParseJobs" DROP CONSTRAINT "ParseJobs_ParseJobStatusId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "Payments" DROP CONSTRAINT "Payments_PlanId_fkey";""");
-            migrationBuilder.Sql("""ALTER TABLE "Subscriptions" DROP CONSTRAINT "Subscriptions_PlanId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "Users" DROP CONSTRAINT IF EXISTS "Users_RoleId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "Vacancies" DROP CONSTRAINT IF EXISTS "Vacancies_VacancyStatusId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "Vacancies" DROP CONSTRAINT IF EXISTS "Vacancies_SourceId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "Candidates" DROP CONSTRAINT IF EXISTS "Candidates_SourceId_fkey";"""); // <-- ВОТ ЗДЕСЬ IF EXISTS
+            migrationBuilder.Sql("""ALTER TABLE "Applications" DROP CONSTRAINT IF EXISTS "Applications_ApplicationStatusId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "StatusHistory" DROP CONSTRAINT IF EXISTS "StatusHistory_FromStatusId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "StatusHistory" DROP CONSTRAINT IF EXISTS "StatusHistory_ToStatusId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "Letters" DROP CONSTRAINT IF EXISTS "Letters_KindId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "Letters" DROP CONSTRAINT IF EXISTS "Letters_StatusId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "ParseJobs" DROP CONSTRAINT IF EXISTS "ParseJobs_ParseJobStatusId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "Payments" DROP CONSTRAINT IF EXISTS "Payments_PlanId_fkey";""");
+            migrationBuilder.Sql("""ALTER TABLE "Subscriptions" DROP CONSTRAINT IF EXISTS "Subscriptions_PlanId_fkey";""");
 
             // ── снимаем PK: иначе UPDATE "+1" упадёт на уникальном индексе (23505) ──
             migrationBuilder.Sql("""ALTER TABLE "Roles" DROP CONSTRAINT "Roles_pkey";""");
