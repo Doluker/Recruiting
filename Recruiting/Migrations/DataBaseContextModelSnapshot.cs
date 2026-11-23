@@ -54,7 +54,7 @@ namespace Recruiting.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ActivityLogs");
+                    b.ToTable("ActivityLogs", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.Application", b =>
@@ -111,7 +111,7 @@ namespace Recruiting.Migrations
 
                     b.HasIndex(new[] { "VacancyId", "ApplicationStatusId" }, "IX_Applications_Vacancy");
 
-                    b.ToTable("Applications", t =>
+                    b.ToTable("Applications", null, t =>
                         {
                             t.HasCheckConstraint("CK_Applications_Score", "(\"Score\" IS NULL) OR ((\"Score\" >= 0) AND (\"Score\" <= 100))");
                         });
@@ -189,7 +189,7 @@ namespace Recruiting.Migrations
 
                     b.HasIndex(new[] { "OwnerId" }, "IX_Candidates_Owner");
 
-                    b.ToTable("Candidates");
+                    b.ToTable("Candidates", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.CandidateSkill", b =>
@@ -217,7 +217,7 @@ namespace Recruiting.Migrations
 
                     b.HasIndex(new[] { "SkillId" }, "IX_CandidateSkills_Skill");
 
-                    b.ToTable("CandidateSkills");
+                    b.ToTable("CandidateSkills", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.City", b =>
@@ -236,7 +236,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("Cities_pkey");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.Currency", b =>
@@ -260,7 +260,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("Currencies_pkey");
 
-                    b.ToTable("Currencies");
+                    b.ToTable("Currencies", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.Education", b =>
@@ -279,7 +279,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("Educations_pkey");
 
-                    b.ToTable("Educations");
+                    b.ToTable("Educations", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.FunnelStatus", b =>
@@ -298,7 +298,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("FunnelStatuses_pkey");
 
-                    b.ToTable("FunnelStatuses");
+                    b.ToTable("FunnelStatuses", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.Letter", b =>
@@ -341,7 +341,7 @@ namespace Recruiting.Migrations
 
                     b.HasIndex(new[] { "ApplicationId" }, "IX_Letters_Application");
 
-                    b.ToTable("Letters");
+                    b.ToTable("Letters", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.LetterKind", b =>
@@ -360,7 +360,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("LetterKinds_pkey");
 
-                    b.ToTable("LetterKinds");
+                    b.ToTable("LetterKinds", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.LetterStatus", b =>
@@ -376,7 +376,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("LetterStatuses_pkey");
 
-                    b.ToTable("LetterStatuses");
+                    b.ToTable("LetterStatuses", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.ParseJob", b =>
@@ -420,7 +420,7 @@ namespace Recruiting.Migrations
                         .IsUnique()
                         .HasFilter("(\"FinishedAt\" IS NULL)");
 
-                    b.ToTable("ParseJobs", t =>
+                    b.ToTable("ParseJobs", null, t =>
                         {
                             t.HasCheckConstraint("CK_ParseJobs_Attempts", "\"Attempts\" >= 0");
                         });
@@ -441,7 +441,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("ParseJobStatuses_pkey");
 
-                    b.ToTable("ParseJobStatuses");
+                    b.ToTable("ParseJobStatuses", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.Payment", b =>
@@ -491,7 +491,7 @@ namespace Recruiting.Migrations
                     b.HasIndex(new[] { "ProviderPaymentId" }, "Payments_ProviderPaymentId_key")
                         .IsUnique();
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.PaymentStatus", b =>
@@ -510,7 +510,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("PaymentStatuses_pkey");
 
-                    b.ToTable("PaymentStatuses");
+                    b.ToTable("PaymentStatuses", (string)null);
 
                     b.HasData(
                         new
@@ -570,7 +570,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("Plans_pkey");
 
-                    b.ToTable("Plans");
+                    b.ToTable("Plans", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.Position", b =>
@@ -589,7 +589,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("Positions_pkey");
 
-                    b.ToTable("Positions");
+                    b.ToTable("Positions", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.ResumeContentType", b =>
@@ -608,7 +608,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("ResumeContentTypes_pkey");
 
-                    b.ToTable("ResumeContentTypes");
+                    b.ToTable("ResumeContentTypes", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.ResumeFile", b =>
@@ -668,7 +668,7 @@ namespace Recruiting.Migrations
                     b.HasIndex(new[] { "OwnerId", "FileHash" }, "ResumeFiles_OwnerId_FileHash_key")
                         .IsUnique();
 
-                    b.ToTable("ResumeFiles");
+                    b.ToTable("ResumeFiles", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.Role", b =>
@@ -687,7 +687,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("Roles_pkey");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.Skill", b =>
@@ -706,7 +706,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("Skills_pkey");
 
-                    b.ToTable("Skills");
+                    b.ToTable("Skills", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.Source", b =>
@@ -725,7 +725,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("Sources_pkey");
 
-                    b.ToTable("Sources");
+                    b.ToTable("Sources", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.StatusHistory", b =>
@@ -794,7 +794,7 @@ namespace Recruiting.Migrations
                     b.HasIndex(new[] { "UserId" }, "UQ_Subscriptions_UserId")
                         .IsUnique();
 
-                    b.ToTable("Subscriptions");
+                    b.ToTable("Subscriptions", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.User", b =>
@@ -835,7 +835,7 @@ namespace Recruiting.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.UserSetting", b =>
@@ -861,7 +861,7 @@ namespace Recruiting.Migrations
                     b.HasIndex(new[] { "UserId" }, "UQ_UserSettings_UserId")
                         .IsUnique();
 
-                    b.ToTable("UserSettings");
+                    b.ToTable("UserSettings", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.Vacancy", b =>
@@ -934,7 +934,7 @@ namespace Recruiting.Migrations
                     b.HasIndex(new[] { "OwnerId", "SourceId", "ExternalId" }, "Vacancies_OwnerId_SourceId_ExternalId_key")
                         .IsUnique();
 
-                    b.ToTable("Vacancies", t =>
+                    b.ToTable("Vacancies", null, t =>
                         {
                             t.HasCheckConstraint("CK_Vacancies_Salary", "(\"SalaryFrom\" IS NULL) OR (\"SalaryTo\" IS NULL) OR (\"SalaryFrom\" <= \"SalaryTo\")");
                         });
@@ -965,7 +965,7 @@ namespace Recruiting.Migrations
                     b.HasIndex(new[] { "VacancyId", "SkillId" }, "VacancySkills_VacancyId_SkillId_key")
                         .IsUnique();
 
-                    b.ToTable("VacancySkills");
+                    b.ToTable("VacancySkills", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.VacancyStatus", b =>
@@ -984,7 +984,7 @@ namespace Recruiting.Migrations
                     b.HasKey("Id")
                         .HasName("VacancyStatuses_pkey");
 
-                    b.ToTable("VacancyStatuses");
+                    b.ToTable("VacancyStatuses", (string)null);
                 });
 
             modelBuilder.Entity("Recruiting.Models.ActivityLog", b =>

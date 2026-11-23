@@ -17,5 +17,6 @@ builder.Services.AddScoped<IVacancyServiceClient, VacancyServiceClient>();
 builder.Services.AddScoped<IApplicationServiceClient, ApplicationServiceClient>();
 builder.Services.AddScoped<ICandidateServiceClient, CandidateServiceClient>();
 builder.Services.AddScoped<IDictionaryServiceClient, DictionaryServiceClient>();
+builder.Services.AddScoped<IResumeServiceClient, ResumeServiceClient>();
 
 await builder.Build().RunAsync();

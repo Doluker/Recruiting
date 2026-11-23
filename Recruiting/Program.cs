@@ -1,6 +1,7 @@
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Minio;
 using MudBlazor.Services;
 using Recruiting.Background;
@@ -12,15 +13,25 @@ using Recruiting.Seeders;
 using Recruiting.Services;
 using System.Net;
 
+// Поиск .env вверх по дереву папок
+Env.TraversePath().Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMudServices();
 
-// Поиск .env вверх по дереву папок
-Env.TraversePath().Load();
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<DataBaseContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<DataBaseContext>(options =>
+{
+    options.UseNpgsql(connectionString);
+    options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
+});
+
+
+
+
 
 builder.Services.Configure<MinioOptions>(builder.Configuration.GetSection(MinioOptions.SectionName));
 builder.Services.AddSingleton<IMinioClient>(sp =>
@@ -133,6 +144,12 @@ app.MapControllers();
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Recruiting.Client.Components._Imports).Assembly);
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DataBaseContext>();
+    await db.Database.MigrateAsync();
+}
 
 await DictionarySeeder.SeedAsync(app.Services);
 
